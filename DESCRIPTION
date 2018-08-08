@@ -1,8 +1,11 @@
 Package: modifiedBChron
+Type: Package
 Title: Run A Modified Version of the Compound Poison-Gamma Chronology Model of Haslett and Parnell, 2008
 Version: 0.4.0
-Authors@R: person("Robin", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Author: Robin Trayler
+Maintainer: The package maintainer <robintrayler@gmail.com>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
 Depends: R (>= 3.3.2)
 License: What license is it under?
 Encoding: UTF-8
