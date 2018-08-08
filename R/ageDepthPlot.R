@@ -10,7 +10,6 @@
 #' @details The \code{ageDepthPlot} function makes a plot of the age probability density functions vs stratigraphic position for several samples. All ages with the same name will be combined into a single PDF.
 #' @export
 #'
-#'
 
 ageDepthPlot <- function(ages,
                          ageSds,
