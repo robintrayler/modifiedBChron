@@ -6,7 +6,9 @@
 #' @return ConfInt = 95 percent confidence interval for each \code{newPosition}
 #' @return raw = Age predictions for each \code{newPosition} for each MCMC run.
 #' @export
-agePredict <- function(model, newPositions,newPositionThicknesses = rep(0, length(newPositions))){
+agePredict <- function(model,
+                       newPositions,
+                       newPositionThicknesses = rep(0, length(newPositions))){
   ## this function is used to predict the age of new points using a modified bchron output model
   ## INPUTS
   ## model = output of the modified bchron age-depth model
@@ -15,14 +17,20 @@ agePredict <- function(model, newPositions,newPositionThicknesses = rep(0, lengt
   ## OUTPUTS
   ## ConfInt = 95% Confidence interval for each point
   ## raw = age predictions for each point for each iteration in the MCMC chain
-  pb <- utils::txtProgressBar(min = 1, max = ncol(model$model), style = 3,width=40,char = '<>') # create a progress bar
+  pb <- utils::txtProgressBar(min = 1,
+                              max = ncol(model$model),
+                              style = 3,
+                              width=40,
+                              char = '<>') # create a progress bar
   x <- model$predictPositions
   n <- length(newPositions)
   predictStore <- matrix(nrow = ncol(model$model),ncol = n)
 
 
   for(i in 1:ncol(model$model)){
-    currPositions <- runif(n, newPositions - newPositionThicknesses, newPositions + newPositionThicknesses)
+    currPositions <- runif(n,
+                           newPositions - newPositionThicknesses,
+                           newPositions + newPositionThicknesses)
     utils::setTxtProgressBar(pb, i) # set the progress bar
     y <- model$model[,i]
     f <- approxfun(x,y)

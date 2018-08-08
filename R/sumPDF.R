@@ -8,7 +8,7 @@
 
 sumPDF <- function(ages,
                    ageSds,
-                   distTypes,
+                   distTypes = rep('G',length(ages)),
                    ids){
   samples <- unique(ids)
   n <- length(samples)
