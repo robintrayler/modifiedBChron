@@ -29,6 +29,7 @@
 #' @return ids = Vector of unique sample names. Useful for plotting
 #' @return psiSDStore, muSDStore, mhSDStore = proposal standard deviations for each model parameter throughout the MCMC run. burn is not removed.
 #' @useDynLib modifiedBChron
+#'
 #' @export
 
 ageModel <- function(ages,

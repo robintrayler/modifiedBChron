@@ -5,12 +5,11 @@
 \title{Run a modified version of the Bchronology algorithm from the R package "Bchron" (Haslett and Parnell, 2008)}
 \usage{
 ageModel(ages, ageSds, positions, positionThicknesses = rep(0,
-  length(newPositions)), ids, distTypes = rep("G", length(ages)),
-  MC = 10000, burn = 2000, adapt = TRUE, mhSD = rep(1,
-  length(unique(ids))), psiSD = 1, muSD = 1,
-  predictPositions = seq(min(positions), max(positions), length = 100),
-  truncateUp = 0, extrapUp = 100, truncateDown = 1e+10,
-  extrapDown = 100)
+  length(positions)), ids, distTypes = rep("G", length(ages)), MC = 10000,
+  burn = 2000, adapt = TRUE, mhSD = rep(1, length(unique(ids))),
+  psiSD = 1, muSD = 1, predictPositions = seq(min(positions),
+  max(positions), length = 100), truncateUp = 0, extrapUp = 100,
+  truncateDown = 1e+10, extrapDown = 100)
 }
 \arguments{
 \item{ages}{Vector of ages}
