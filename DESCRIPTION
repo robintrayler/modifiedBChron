@@ -3,7 +3,7 @@ Type: Package
 Title: Run A Modified Version of the Compound Poison-Gamma Chronology Model of Haslett and Parnell, 2008
 Version: 0.4.0
 Author: Robin Trayler
-Maintainer: The package maintainer <robintrayler@gmail.com>
+Maintainer: Robin B. Trayler <robintrayler@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 Depends: R (>= 3.3.2)

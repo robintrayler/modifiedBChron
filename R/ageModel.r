@@ -32,8 +32,6 @@
 #'
 #'@examples
 #'
-#'
-#'
 #' @export
 
 ageModel <- function(ages,

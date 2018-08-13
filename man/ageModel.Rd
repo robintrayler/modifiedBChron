@@ -73,18 +73,5 @@ psiSDStore, muSDStore, mhSDStore = proposal standard deviations for each model p
 Run a modified version of the Bchronology algorithm from the R package "Bchron" (Haslett and Parnell, 2008)
 }
 \examples{
-data(Glendalough2)
-model <- ageModel(ages = Glendalough2$ages,
-                 ageSds = Glendalough2$ageSds,
-                 positions = Glendalough2$position,
-                 positionThicknesses = Glendalough2$halfThickness,
-                 ids = Glendalough2$id,
-                 distTypes = Glendalough2$distType,
-                 MC = 10000,
-                 burn = 2000)
-
-modelPlot(model = model)
-
-
 
 }
