@@ -155,8 +155,7 @@ modelPlot <- function(model,agePredictOutput = NA,scale = 1,PDF = F,...){
          bty = 'n')
   legend('topleft',
          legend = rev(model$ids),
-         pch = 15,
-         col = rev(cols),
+         fill = rev(cols),
          bty = 'n',...)
   if(PDF == T){
     dev.off()
