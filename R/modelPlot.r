@@ -148,12 +148,15 @@ modelPlot <- function(model,agePredictOutput = NA,scale = 1,PDF = F,...){
   ##---------------------------------------------------------------------------
   ## add some legends
   legend('bottomright',
+         lwd = c(2,NA),
+         pch = c(NA, 15),
          legend = c('median','95% HDI'),
-         fill = c('black',rgb(0,0,0,.5)),
+         col = c('black',rgb(0,0,0,.5)),
          bty = 'n')
   legend('topleft',
          legend = rev(model$ids),
-         fill = rev(cols),
+         pch = 15,
+         col = rev(cols),
          bty = 'n',...)
   if(PDF == T){
     dev.off()
