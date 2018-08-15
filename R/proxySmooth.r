@@ -60,7 +60,7 @@ proxySmooth <- function(proxy,
   ##---------------------------------------------------------------------------
   ## fit a smoothing model
   pb <- txtProgressBar(min = 0, # start up a text progress bar
-                       max = nrow(enamelPositions$raw),
+                       max = nrow(agePredictOutput$raw),
                        style = 3,
                        width = 40,
                        char = '<>')
