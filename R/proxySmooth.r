@@ -1,6 +1,6 @@
 #' This function uses a Monte Carlo aproach to repetedly fit a smoothing model to some proxy data incorperating the model uncertanties in age
 #' @param proxy Vector proxy compostions. must be numeric
-#' @param proxySD optional vector of standard deviations for \code{proxy}. If specified \code{proxy} will be varried from a normal distribution with a mean of \code{proxy} and a standard deviation of \code{proxySD}
+#' @param proxySD optional vector of 1 sigma uncertanties for \code{proxy}. Must be the same length as \code{proxy}
 #' @param agePredictOutput Output from \{agePredict} for the stratigraphic positions of \code{proxy}
 #' @param grid vector of positions to evaluate the smoothing model at.
 #' @param method Smoothing method to use. currently supported methods are 'spline', 'movingAverage' and 'polynomial'
