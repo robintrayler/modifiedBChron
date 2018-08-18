@@ -140,8 +140,19 @@ modelPlot <- function(model,agePredictOutput = NA,scale = 1,PDF = F,...){
       low <- agePredictOutput$ConfInt[i, 2]
       mid <- high <- agePredictOutput$ConfInt[i, 3]
       high <- agePredictOutput$ConfInt[i, 4]
-      arrows(low, level, high, level, length = 0, lwd = 2, col = 'steelblue')
-      points(mid, level, pch = 19, col = 'steelblue')
+      arrows(low,
+             level,
+             high,
+             level,
+             length = 0.025,
+             angle = 90,
+             code = 3,
+             lwd = 2,
+             col = rgb(0.97, 0.46, 0.43, .5))
+      points(mid,
+             level,
+             pch = 21,
+             bg = rgb(0.97, 0.46, 0.43, .5))
     }
   }
 

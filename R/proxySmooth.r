@@ -91,6 +91,7 @@ proxySmooth <- function(proxy,
               agePredictOutput = agePredictOutput,
               method = method,
               smoothParameter = smoothParameter,
-              HDI = HDI))
+              HDI = HDI,
+              grid = grid))
 }
 
