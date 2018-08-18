@@ -105,8 +105,7 @@ modelPlot <- function(model,agePredictOutput = NA,scale = 1,PDF = F,...){
        xlab = 'Age',
        ylab = 'Position',
        tcl = .25,
-       type = 'n',
-       main = 'Age - Position Plot')
+       type = 'n')
   grid()
   ##---------------------------------------------------------------------------
   # add a shaded polygon of the 95% HDI
