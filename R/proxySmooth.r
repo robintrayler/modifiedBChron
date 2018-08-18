@@ -85,6 +85,12 @@ proxySmooth <- function(proxy,
   confInt <- apply(X = modelStore,
                    MARGIN = 1, FUN = quantile,
                    prob = c((1 - HDI)/2, 0.5, (1 + HDI)/2), na.rm = T)
-  return(list(HDI = confInt, raw = modelStore))
+  return(list(HDI = confInt,
+              raw = modelStore,
+              proxy = proxy,
+              agePredictOutput = agePredictOutput,
+              method = method,
+              smoothParameter = smoothParameter,
+              HDI = HDI))
 }
 
