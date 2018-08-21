@@ -11,9 +11,11 @@ proxySmooth(proxy, proxySD = rep(0, length(proxy)), agePredictOutput, grid,
 \arguments{
 \item{proxy}{Vector proxy compostions. must be numeric}
 
-\item{proxySD}{optional vector of standard deviations for \code{proxy}. If specified \code{proxy} will be varried from a normal distribution with a mean of \code{proxy} and a standard deviation of \code{proxySD}}
+\item{proxySD}{optional vector of 1 sigma uncertanties for \code{proxy}. Must be the same length as \code{proxy}}
 
-\item{grid}{vector of positions to evaluate the smoothing model at.}
+\item{agePredictOutput}{Output from \code{agePredict} for the stratigraphic positions of \code{proxy}}
+
+\item{grid}{vector of positions to evaluate the smoothing model at}
 
 \item{method}{Smoothing method to use. currently supported methods are 'spline', 'movingAverage' and 'polynomial'}
 
