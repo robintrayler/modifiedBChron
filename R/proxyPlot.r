@@ -4,7 +4,6 @@
 #' @param stratSmoothParameter optional parameter for smoothing the proxy data vs stratigraphic position. must be meet the same criteria as \code{smoothParameter} in \code{proxySmooth}.
 #' Default method for spline fitting uses the same \code{smoothParameter} as proxySmooth. Default method for moving average fitting will estimate a smoothing parameter based on the median accumulation
 #' rate and \code{smoothParameter} from \code{proxySmooth}.
-#'
 #' @export
 #'
 proxyPlot <- function(proxySmoothOutput,

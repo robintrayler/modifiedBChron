@@ -405,22 +405,25 @@ ageModel <- function(ages,
       if(n%%h == 0){
         cd <- 2.4/sqrt(1) # Gelman et al. (1996)
         psiK <- psiStore[(n-h+1):n] - mean(psiStore[(n-h+1):n])
-        psiRt <- var(psiK)
-        psiSD <- sqrt((cd^2) * psiRt)
-        psiSD <- ifelse(is.na(psiSD),cd*sd(psiStore,na.rm = T),psiSD)
-        psiSD <- ifelse(psiSD == 0,cd*sd(psiStore,na.rm = T),psiSD)
-        muK <-  muStore[(n-h+1):n] - mean(muStore[(n-h+1):n])
-        muRt <- var(muK)
+        psiRt <- var(psiK) # calculate the variance
+        psiSD <- sqrt((cd^2) * psiRt) # calculate the standard deviation
+        psiSD <- ifelse(is.na(psiSD),cd*sd(psiStore,na.rm = T),psiSD) # get rid of NAs
+        psiSD <- ifelse(psiSD == 0,cd*sd(psiStore,na.rm = T),psiSD) # get rid of zeroes
+        muK <-  muStore[(n-h+1):n] - mean(muStore[(n-h+1):n]) # calculate K
+        muRt <- var(muK) # calculate the variance
         muSD <- sqrt(cd^2 * muRt)
         muSD <- ifelse(is.na(muSD),cd*sd(muStore,na.rm = T),muSD)
         muSD <- ifelse(muSD == 0,cd*sd(muStore,na.rm = T),muSD)
 
-        for(q in 1:nSamples){
+        for(q in 1:nSamples){ # proposal SD adjustment for thetas
           thetaK <- thetaStore[(n-h+1):n,q] - mean(thetaStore[(n-h+1):n,q])
           thetaRt <- var(thetaK)
-          mhSD[q] <- ifelse(is.na(sqrt(cd^2 * thetaRt)),cd*sd(thetaStore[,q],na.rm = T),sqrt(cd^2 * thetaRt))
+          mhSD[q] <- ifelse(is.na(sqrt(cd^2 * thetaRt)),
+                            cd*sd(thetaStore[,q],na.rm = T),
+                            sqrt(cd^2 * thetaRt))
         }
       }
+      ## Store the results
       psiSDStore[n] <- psiSD
       muSDStore[n] <- muSD
       mhSDStore[n,] <- mhSD
