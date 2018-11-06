@@ -1,6 +1,6 @@
 #' Make plots of modeled posteriors from the output of an ageModel run
 #' @param model Output of the \code{ageModel} function
-#' @param prob should plots be printed to the current working directory as PDF files? Defaults to FALSE
+#' @param prob Desired level of probability for HDI's. Defaults to 95%
 #' @param sifF number of decimal places to display on histograms
 #' @export
 
@@ -9,7 +9,11 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
   upperP <- (1 + prob)/2
   ##----------------------------------------------------------------------------
   ## set up colors and layout
-  colsPal <- colorRampPalette(c('#d7191c','#fdae61','#ffffbf','#abd9e9','#2c7bb6'))
+  colsPal <- colorRampPalette(c('#d7191c',
+                                '#fdae61',
+                                '#ffffbf',
+                                '#abd9e9',
+                                '#2c7bb6'))
   cols <- colsPal(ncol(model$thetas))
   layout(cbind(c(1,2,3)))
 

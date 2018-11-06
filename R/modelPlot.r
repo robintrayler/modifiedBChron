@@ -13,7 +13,11 @@ modelPlot <- function(model,agePredictOutput = NA,scale = 1,PDF = F,...){
   ## model = output of the modified bchron age-depth model
   ## PDF = c(T,F). If TRUE plots will be printed to a PDF in the current working directory, else plots are displated in R
   scl <- (diff(range(model$predictPositions))/ncol(model$thetas))/max(model$nAges)*scale # scaling factor for ploting age PDFs
-  colsPal <- colorRampPalette(c('#d7191c','#fdae61','#ffffbf','#abd9e9','#2c7bb6'))
+  colsPal <- colorRampPalette(c('#d7191c',
+                                '#fdae61',
+                                '#ffffbf',
+                                '#abd9e9',
+                                '#2c7bb6'))
   cols <- colsPal(ncol(model$thetas))
 
   ##---------------------------------------------------------------------------

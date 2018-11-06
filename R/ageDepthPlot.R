@@ -69,7 +69,11 @@ ageDepthPlot <- function(ages,
   ##---------------------------------------------------------------------------
   ## set axis limits, determine scaling and colors
   scl <- diff(range(currPositions))/n*scale # scaling factor for ploting age PDFs
-  colsPal <- colorRampPalette(c('#d7191c','#fdae61','#ffffbf','#abd9e9','#2c7bb6'))
+  colsPal <- colorRampPalette(c('#d7191c',
+                                '#fdae61',
+                                '#ffffbf',
+                                '#abd9e9',
+                                '#2c7bb6'))
   cols <- colsPal(n)
   xlimit <- c(max(ages+ageSds*5),min(ages-ageSds*5))
   ylimit <- c(min(currPositions)-scl,max(currPositions)+scl)

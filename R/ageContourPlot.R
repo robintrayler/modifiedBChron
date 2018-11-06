@@ -7,7 +7,11 @@
 #'
 
 ageContourPlot <- function(model,...){
-  colsPal <- colorRampPalette(c('#d7191c','#fdae61','#ffffbf','#abd9e9','#2c7bb6'))
+  colsPal <- colorRampPalette(c('#d7191c',
+                                '#fdae61',
+                                '#ffffbf',
+                                '#abd9e9',
+                                '#2c7bb6'))
   cols <- colsPal(ncol(model$thetas))
   scl <- (diff(range(model$predictPositions))/ncol(model$thetas))/max(model$nAges)
   xlims <- c(model$confInt[3,1],model$confInt[1,length(model$predictPositions)])
