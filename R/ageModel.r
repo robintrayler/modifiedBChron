@@ -41,7 +41,7 @@ ageModel <- function(ages,
                      distTypes = rep('G',length(ages)),
                      MC = 10000,
                      burn = 2000,
-                     prob = 0.95,
+                     probability = 0.95,
                      adapt = TRUE,
                      mhSD = rep(1,length(unique(ids))),
                      psiSD = 1,
@@ -437,7 +437,7 @@ ageModel <- function(ages,
   }
   ##-----------------------------------------------------------------------------
 
-  return(list(confInt = apply(modelStore[,burn:MC], 1, quantile,c((1 - prob) / 2, 0.5 , (1 + prob) / 2)),
+  return(list(confInt = apply(modelStore[,burn:MC], 1, quantile,c((1 - probability) / 2, 0.5 , (1 + probability) / 2)),
               model = modelStore[,burn:MC],
               thetas = thetaStore,
               positionStore = positionStore,
