@@ -8,6 +8,7 @@
 #' @param distTypes c('G','U') Vector of distribution types to model each age as. Choices are 'G' for Gaussian, and 'U' uniform. Must be the same length and given in the same order as \code{ages}
 #' @param MC Number of MCMC interation to run for. Defaults to 10000
 #' @param burn Number of initial iterations to discard. Defaults to 2000
+#' @param prob Desired confidence to return. Defaults to 95% HDI
 #' @param adapt Should the proposal standard deviation for model parameters be determined using the adaptive proposal algorithm of Haario et al., 1998. Defaults to TRUE
 #' @param mhSD Metropolis-Hastings proposal standard deviation for the age parameters. If adapt = TRUE it will be determined by the model run. Otherwise a vector of standard deviations must be specified with length = \code{unique(ids)}
 #' @param psiSD Metropolis-Hastings proposal standard deviation for the Compound Poisson-Gamma scale parameter. If adapt = TRUE it will be determined by the model run.
@@ -42,6 +43,7 @@ ageModel <- function(ages,
                      distTypes = rep('G',length(ages)),
                      MC = 10000,
                      burn = 2000,
+                     prob = 0.95,
                      adapt = TRUE,
                      mhSD = rep(1,length(unique(ids))),
                      psiSD = 1,
@@ -52,7 +54,7 @@ ageModel <- function(ages,
                      truncateDown = 1e10,
                      extrapDown = 100){
 
-  ##############################################################################################################################
+  ##-----------------------------------------------------------------------------
   # C function for truncated random walk
   truncatedWalk = function(old,sd,low,high) {
     if(isTRUE(all.equal(low, high, tolerance = 1e-10))) return(list(new=low,rat=1))
@@ -74,7 +76,7 @@ ageModel <- function(ages,
     #if(is.nan(rat)) rat=1 # Useful for when proposed value and new value are identical
     return(list(new=new,rat=rat))
   }
-
+  ##-----------------------------------------------------------------------------
   # C functions for tweedie
   dtweediep1 = Vectorize(function(y,p,mu,phi) {
     return(.C('dtweediep1',
@@ -85,8 +87,8 @@ ageModel <- function(ages,
               as.double(0),
               PACKAGE = 'modifiedBChron')[5][[1]])
   })
-
-  # Some C functions to do prediction and interpolation
+  ##-----------------------------------------------------------------------------
+  ## Some C functions to do prediction and interpolation
   predictInterp = function(alpha,
                            lambda,
                            beta,
@@ -152,7 +154,7 @@ ageModel <- function(ages,
               PACKAGE = 'modifiedBChron')[10][[1]])
   }
 
-  ##############################################################################################################################
+  ##-----------------------------------------------------------------------------
   ## function for creating a summed PDF of ages
   compoundProb <- function(ages,sigs,distType,x){
     interval <- matrix(0,nrow = length(x), ncol=length(ages))
@@ -165,9 +167,7 @@ ageModel <- function(ages,
     G <- apply(interval,1,sum)
     return(G)
   }
-
-
-
+  ##-----------------------------------------------------------------------------
   o = order(positions)
   if(any(positions[o]!=positions)) {
     warning("positions not given in order - re-ordering")
@@ -179,8 +179,7 @@ ageModel <- function(ages,
     ids = ids[o]
   }
 
-
-  ##-------------------------------------------------------------------
+  ##-----------------------------------------------------------------------------
   ## sort the data
   nSamples <- length(unique(ids)) # get the number of unique date layers
   masterPositions <- vector()
@@ -189,13 +188,13 @@ ageModel <- function(ages,
     masterPositions[i] <- positions[ids == nNames[i]][1]
   }
 
-
+  ##-----------------------------------------------------------------------------
   nThicknesses <- vector(length = nSamples)
   for(i in 1:nSamples){
     nThicknesses[i] <- unique(positionThicknesses[positions == masterPositions[i]])
   }
 
-  ##-------------------------------------------------------------------
+  ##-----------------------------------------------------------------------------
   # count the number of ages at each unique stratigraphic position
   # this is used for scaling the plots later
   nAges <- rep(NA,length(nSamples))
@@ -203,8 +202,7 @@ ageModel <- function(ages,
     nAges[i] <- length(ids[ids == nNames[i]])
   }
 
-
-  ##-------------------------------------------------------------------
+  ##-----------------------------------------------------------------------------
   ## generate the summed probability distirbutions at each unique depth position
   prob <-matrix(0,nrow=100000,ncol=nSamples) # create an empty matrix to store the probabilites
   ageGrid <- seq(min(ages-ageSds*10),max(ages+ageSds*10),length.out=100000) # Grid of ages to evaluate over
@@ -216,8 +214,7 @@ ageModel <- function(ages,
   }
   rm(j)
 
-
-  ##-------------------------------------------------------------------
+  ##-----------------------------------------------------------------------------
   ## prealocate some storage
   thetaStore <- matrix(NA,nrow=MC,ncol=nSamples)
   muStore <- vector(length=MC)
@@ -228,7 +225,8 @@ ageModel <- function(ages,
   psiSDStore <- psiStore
   muSDStore <- psiStore
   mhSDStore <- thetaStore
-  ##-------------------------------------------------------------------
+
+  ##-----------------------------------------------------------------------------
   ## get some starting guesses for MH sampling and make sure they conform to superposition
   thetas <- vector(length = nSamples) # create a vector to store current thetas
   bad = TRUE
@@ -246,7 +244,7 @@ ageModel <- function(ages,
   }
   rm(j)
   print(paste('starting ages found after', count, 'attempts'))
-  ##-------------------------------------------------------------------
+  ##-----------------------------------------------------------------------------
   ## calculate some initial parameters
   ## based on Haslett and Parnell (2008)
   currPositions <- masterPositions
@@ -255,18 +253,24 @@ ageModel <- function(ages,
   p = 1.2
   alpha <- (2-p)/(p-1) # haslett and parnell
 
-  pb <- utils::txtProgressBar(min = 1, max = MC, style = 3,width=40,char = '<>') # create a progress bar
+  pb <- utils::txtProgressBar(min = 1,
+                              max = MC,
+                              style = 3,
+                              width=40,
+                              char = '<>') # create a progress bar
 
   for(n in 1:MC){
     utils::setTxtProgressBar(pb, n) # set the progress bar
-    ##-----------------------------------------------------------------------------
+    ##-------------------------------------------------------------------------
     ## calculate some secondary model paremeters
     ## based on Haslett and Parnell (2008)
-    lambda <- (mu^(2-p))/(psi*(2-p))
-    beta <- 1/(psi*(p-1)*mu^(p-1))
-    ##-----------------------------------------------------------------------------
+    lambda <- (mu ^ (2 - p)) / (psi * (2 - p))
+    beta <- 1 / (psi * (p - 1)*mu ^ (p - 1))
+    ##-------------------------------------------------------------------------
     ## choose some random positions from a uniform distribution for each dated horizon.
-    currPositions <- runif(nSamples, masterPositions - nThicknesses, masterPositions + nThicknesses)
+    currPositions <- runif(nSamples,
+                           masterPositions - nThicknesses,
+                           masterPositions + nThicknesses)
     do <- order(currPositions)
     diffPositions <- diff(currPositions[do])
     thetas[do] <- sort(thetas,decreasing = T)
@@ -286,7 +290,7 @@ ageModel <- function(ages,
                                thetajp1 = thetas[do[j+1]])
       modelStore[inRange,n] <- predval
     }
-
+    ##-------------------------------------------------------------------------
     # Extrapolate up
     if(any(predictPositions >= currPositions[do[nSamples]])){
       inRange <- predictPositions >= currPositions[do[nSamples]]
@@ -315,65 +319,69 @@ ageModel <- function(ages,
       modelStore[inRange,n] <- predval
     }
 
-
-
-    #-----------------------------------------------------------------------------
+    ##-------------------------------------------------------------------------
     ## Update thetas
     for(i in 1:nSamples){
       thetaCurrent <- thetas[do[i]]
       ## choose a new theta from a truncated normal where truncations are the surrounding thetas
       thetaProposed <- truncatedWalk(old = thetaCurrent,
                                      sd = mhSD[do[i]],
-                                     low = ifelse(i == nSamples,truncateUp,thetas[do[i+1]]-1e-10), # if we're at the top truncate at a really small number
-                                     high = ifelse(i == 1,1e10,thetas[do[i-1]] + 1e-10)) # if we're at the bottom, truncate at a really big number
+                                     low = ifelse(i == nSamples, truncateUp, thetas[do[i+1]]-1e-10), # if we're at the top truncate at a really small number
+                                     high = ifelse(i == 1,1e10, thetas[do[i-1]] + 1e-10)) # if we're at the bottom, truncate at a really big number
 
-      pProposed <- log(prob[,do[i]][which.min(abs(ageGrid - thetaProposed$new))])
-      pProposed <-  max(pProposed,-1000000, na.rm = T) # just incase things get really small
-      pCurrent <- log(prob[,do[i]][which.min(abs(ageGrid - thetaCurrent))])
-      pCurrent <-  max(pCurrent,-1000000,na.rm = T) # just incase things get really small
+      pProposed <- log(prob[, do[i]][which.min(abs(ageGrid - thetaProposed$new))])
+      pProposed <-  max(pProposed, -1000000, na.rm = T) # just incase things get really small
+      pCurrent <- log(prob[, do[i]][which.min(abs(ageGrid - thetaCurrent))])
+      pCurrent <-  max(pCurrent, -1000000, na.rm = T) # just incase things get really small
 
-      priorProposed <-  ifelse(i == 1,0,
-                               log(dtweediep1(thetas[do[i - 1]]-thetaProposed$new,
+      priorProposed <-  ifelse(i == 1,
+                               0,
+                               log(dtweediep1(thetas[do[i - 1]] - thetaProposed$new,
                                               p = p,
-                                              mu = mu*(diffPositions[i-1]),
-                                              phi = psi*(diffPositions[i-1])^(p-1)))) +
-        ifelse(i == nSamples,0,
+                                              mu = mu * (diffPositions[i - 1]),
+                                              phi = psi * (diffPositions[i - 1]) ^ (p - 1)))) +
+        ifelse(i == nSamples,
+               0,
                log(dtweediep1(thetaProposed$new - thetas[do[i + 1]],
                               p = p,
                               mu = mu*(diffPositions[i]),
-                              phi = psi*(diffPositions[i])^(p-1))))
+                              phi = psi*(diffPositions[i]) ^ (p - 1))))
 
       priorCurrent <-  ifelse(i == 1,0,
-                              log(dtweediep1(thetas[do[i - 1]]-thetaCurrent,
+                              log(dtweediep1(thetas[do[i - 1]] - thetaCurrent,
                                              p = p,
-                                             mu = mu*(diffPositions[i-1]),
-                                             phi = psi*(diffPositions[i-1])^(p-1)))) +
-        ifelse(i == nSamples,0,
+                                             mu = mu * (diffPositions[i - 1]),
+                                             phi = psi * (diffPositions[i - 1])^(p - 1)))) +
+        ifelse(i == nSamples,
+               0,
                log(dtweediep1(thetaCurrent - thetas[do[i + 1]],
                               p = p,
                               mu = mu*(diffPositions[i]),
-                              phi = psi*(diffPositions[i])^(p-1))))
-      priorCurrent <- max(priorCurrent,-1000000,na.rm = T)
-      priorProposed <- max(priorProposed,-1000000,na.rm = T)
+                              phi = psi*(diffPositions[i]) ^ (p - 1))))
+      priorCurrent <- max(priorCurrent, -1000000, na.rm = T)
+      priorProposed <- max(priorProposed, -1000000, na.rm = T)
       logRtheta <- priorProposed - priorCurrent + pProposed - pCurrent + log(thetaProposed$rat)
-      logRtheta <- max(logRtheta,-1000000,na.rm = T)
-      if(runif(1,0,1) < min(1,exp(logRtheta))){thetas[do[i]] <- thetaProposed$new}
+      logRtheta <- max(logRtheta, -1000000, na.rm = T)
+      if(runif(1, 0, 1) < min(1, exp(logRtheta))){thetas[do[i]] <- thetaProposed$new}
     }
     thetaStore[n,] <- thetas
     #-----------------------------------------------------------------------------
     ## Update mu
     muCurrent <- mu
-    muProposed <- truncatedWalk(old = mu, sd = muSD,low = 1e-10,high = 1e10)
+    muProposed <- truncatedWalk(old = mu,
+                                sd = muSD,
+                                low = 1e-10,
+                                high = 1e10)
     priorMu <- sum(log(dtweediep1(abs(diff(thetas[do])),
                                   p = p,
-                                  mu = muProposed$new*diffPositions,
-                                  phi = psi/diffPositions^(p-1)))) -
+                                  mu = muProposed$new * diffPositions,
+                                  phi = psi / diffPositions^(p-1)))) -
       sum(log(dtweediep1(abs(diff(thetas[do])),
                          p = p,
-                         mu = mu*diffPositions,
-                         phi = psi/diffPositions^(p-1)))) + log(muProposed$rat)
+                         mu = mu * diffPositions,
+                         phi = psi / diffPositions^(p - 1)))) + log(muProposed$rat)
 
-    mu <- ifelse(runif(1,0,1) < min(1,exp(priorMu)),muProposed$new,muCurrent)
+    mu <- ifelse(runif(1, 0, 1) < min(1, exp(priorMu)), muProposed$new, muCurrent)
     muStore[n] <- mu
 
     ##-----------------------------------------------------------------------------
@@ -387,14 +395,14 @@ ageModel <- function(ages,
 
     priorPsi <- sum(log(dtweediep1(abs(diff(thetas[do])),
                                    p = p,
-                                   mu = mu*diffPositions,
-                                   phi = psiProposed$new/diffPositions^(p-1)))) -
+                                   mu = mu * diffPositions,
+                                   phi = psiProposed$new / diffPositions ^ (p - 1)))) -
       sum(log(dtweediep1(abs(diff(thetas[do])),
                          p = p,
-                         mu = mu*diffPositions,
-                         phi = psi/(diffPositions^(p-1))))) + log(psiProposed$rat)
+                         mu = mu * diffPositions,
+                         phi = psi / (diffPositions ^ (p - 1))))) + log(psiProposed$rat)
 
-    psi <- ifelse(runif(1,0,1) < min(1,exp(priorPsi)),psiProposed$new,psiCurrent)
+    psi <- ifelse(runif(1, 0, 1) < min(1, exp(priorPsi)), psiProposed$new, psiCurrent)
     psiStore[n] <- psi
 
 
@@ -404,23 +412,23 @@ ageModel <- function(ages,
       h = 200
       if(n%%h == 0){
         cd <- 2.4/sqrt(1) # Gelman et al. (1996)
-        psiK <- psiStore[(n-h+1):n] - mean(psiStore[(n-h+1):n])
+        psiK <- psiStore[(n - h + 1): n] - mean(psiStore[(n - h + 1): n])
         psiRt <- var(psiK) # calculate the variance
-        psiSD <- sqrt((cd^2) * psiRt) # calculate the standard deviation
-        psiSD <- ifelse(is.na(psiSD),cd*sd(psiStore,na.rm = T),psiSD) # get rid of NAs
-        psiSD <- ifelse(psiSD == 0,cd*sd(psiStore,na.rm = T),psiSD) # get rid of zeroes
-        muK <-  muStore[(n-h+1):n] - mean(muStore[(n-h+1):n]) # calculate K
+        psiSD <- sqrt((cd ^ 2) * psiRt) # calculate the standard deviation
+        psiSD <- ifelse(is.na(psiSD),cd * sd(psiStore, na.rm = T), psiSD) # get rid of NAs
+        psiSD <- ifelse(psiSD == 0,cd * sd(psiStore, na.rm = T), psiSD) # get rid of zeroes
+        muK <-  muStore[(n - h + 1): n] - mean(muStore[(n - h + 1): n]) # calculate K
         muRt <- var(muK) # calculate the variance
-        muSD <- sqrt(cd^2 * muRt)
-        muSD <- ifelse(is.na(muSD),cd*sd(muStore,na.rm = T),muSD)
-        muSD <- ifelse(muSD == 0,cd*sd(muStore,na.rm = T),muSD)
+        muSD <- sqrt(cd ^ 2 * muRt)
+        muSD <- ifelse(is.na(muSD), cd * sd(muStore, na.rm = T), muSD)
+        muSD <- ifelse(muSD == 0, cd * sd(muStore, na.rm = T), muSD)
 
         for(q in 1:nSamples){ # proposal SD adjustment for thetas
-          thetaK <- thetaStore[(n-h+1):n,q] - mean(thetaStore[(n-h+1):n,q])
+          thetaK <- thetaStore[(n - h + 1): n, q] - mean(thetaStore[( n - h + 1): n, q])
           thetaRt <- var(thetaK)
-          mhSD[q] <- ifelse(is.na(sqrt(cd^2 * thetaRt)),
-                            cd*sd(thetaStore[,q],na.rm = T),
-                            sqrt(cd^2 * thetaRt))
+          mhSD[q] <- ifelse(is.na(sqrt(cd ^ 2 * thetaRt)),
+                            cd * sd(thetaStore[, q], na.rm = T),
+                            sqrt(cd ^ 2 * thetaRt))
         }
       }
       ## Store the results
@@ -431,7 +439,7 @@ ageModel <- function(ages,
   }
   ##-----------------------------------------------------------------------------
 
-  return(list(confInt = apply(modelStore[,burn:MC],1,quantile,c(0.025,.5,.975)),
+  return(list(confInt = apply(modelStore[,burn:MC], 1, quantile,c((1 - prob) / 2, 0.5 , (1 + prob) / 2)),
               model = modelStore[,burn:MC],
               thetas = thetaStore,
               positionStore = positionStore,

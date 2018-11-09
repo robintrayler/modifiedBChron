@@ -9,7 +9,7 @@ posteriorPlot(model, prob = 0.95, sigF = 3)
 \arguments{
 \item{model}{Output of the \code{ageModel} function}
 
-\item{prob}{should plots be printed to the current working directory as PDF files? Defaults to FALSE}
+\item{prob}{Desired level of probability for HDI's. Defaults to 95%}
 
 \item{sifF}{number of decimal places to display on histograms}
 }

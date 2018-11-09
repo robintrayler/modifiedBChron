@@ -6,10 +6,11 @@
 \usage{
 ageModel(ages, ageSds, positions, positionThicknesses = rep(0,
   length(positions)), ids, distTypes = rep("G", length(ages)), MC = 10000,
-  burn = 2000, adapt = TRUE, mhSD = rep(1, length(unique(ids))),
-  psiSD = 1, muSD = 1, predictPositions = seq(min(positions),
-  max(positions), length = 100), truncateUp = 0, extrapUp = 100,
-  truncateDown = 1e+10, extrapDown = 100)
+  burn = 2000, prob = 0.95, adapt = TRUE, mhSD = rep(1,
+  length(unique(ids))), psiSD = 1, muSD = 1,
+  predictPositions = seq(min(positions), max(positions), length = 100),
+  truncateUp = 0, extrapUp = 100, truncateDown = 1e+10,
+  extrapDown = 100)
 }
 \arguments{
 \item{ages}{Vector of ages}
@@ -27,6 +28,8 @@ ageModel(ages, ageSds, positions, positionThicknesses = rep(0,
 \item{MC}{Number of MCMC interation to run for. Defaults to 10000}
 
 \item{burn}{Number of initial iterations to discard. Defaults to 2000}
+
+\item{prob}{Desired confidence to return. Defaults to 95% HDI}
 
 \item{adapt}{Should the proposal standard deviation for model parameters be determined using the adaptive proposal algorithm of Haario et al., 1998. Defaults to TRUE}
 
