@@ -4,7 +4,7 @@
 #' @param agePredictOutput Output of the agePredict function. If specified, points and error bars will be added to the age model plots for the predicted points
 #' @param scale Scaling factor for age PDFs
 #' @param predictLabels should predicted ages for points be displayed?
-#' @param ... Optional arguments to be passed to plot legend
+#' @param ... Optional arguments to be passed to plot (xlim, ylim, xlab, ylab, main)
 #' @export
 #
 

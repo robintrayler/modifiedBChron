@@ -6,7 +6,7 @@
 \usage{
 ageModel(ages, ageSds, positions, positionThicknesses = rep(0,
   length(positions)), ids, distTypes = rep("G", length(ages)), MC = 10000,
-  burn = 2000, prob = 0.95, adapt = TRUE, mhSD = rep(1,
+  burn = 2000, probability = 0.95, adapt = TRUE, mhSD = rep(1,
   length(unique(ids))), psiSD = 1, muSD = 1,
   predictPositions = seq(min(positions), max(positions), length = 100),
   truncateUp = 0, extrapUp = 100, truncateDown = 1e+10,
@@ -29,8 +29,6 @@ ageModel(ages, ageSds, positions, positionThicknesses = rep(0,
 
 \item{burn}{Number of initial iterations to discard. Defaults to 2000}
 
-\item{prob}{Desired confidence to return. Defaults to 95% HDI}
-
 \item{adapt}{Should the proposal standard deviation for model parameters be determined using the adaptive proposal algorithm of Haario et al., 1998. Defaults to TRUE}
 
 \item{mhSD}{Metropolis-Hastings proposal standard deviation for the age parameters. If adapt = TRUE it will be determined by the model run. Otherwise a vector of standard deviations must be specified with length = \code{unique(ids)}}
@@ -48,6 +46,8 @@ ageModel(ages, ageSds, positions, positionThicknesses = rep(0,
 \item{truncateDown}{Truncation age for extrapolation below the bottom of the section. Defaults to 1e10 (a really big number)}
 
 \item{extrapDown}{Number of extrapolations to perform below the bottom of the section. defaults to 100}
+
+\item{prob}{Desired confidence to return. Defaults to 95% HDI}
 }
 \value{
 ConfInt = 95 percent confidence intervals for the model run
@@ -74,7 +74,4 @@ psiSDStore, muSDStore, mhSDStore = proposal standard deviations for each model p
 }
 \description{
 Run a modified version of the Bchronology algorithm from the R package "Bchron" (Haslett and Parnell, 2008)
-}
-\examples{
-
 }

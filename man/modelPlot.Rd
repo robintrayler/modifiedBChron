@@ -4,18 +4,18 @@
 \alias{modelPlot}
 \title{This function generates two age model plots given the output of an ageModel run.}
 \usage{
-modelPlot(model, agePredictOutput = NA, scale = 1, PDF = F, ...)
+modelPlot(model, agePredictOutput = NA, predictLabels = T, scale = 1, ...)
 }
 \arguments{
 \item{model}{Output of the \code{ageModel} function}
 
 \item{agePredictOutput}{Output of the agePredict function. If specified, points and error bars will be added to the age model plots for the predicted points}
 
+\item{predictLabels}{should predicted ages for points be displayed?}
+
 \item{scale}{Scaling factor for age PDFs}
 
-\item{PDF}{should plots be printed to the current working directory as PDF files? Defaults to FALSE}
-
-\item{...}{Optional arguments to be passed to plot legend}
+\item{...}{Optional arguments to be passed to plot (xlim, ylim, xlab, ylab, main)}
 }
 \description{
 This function generates two age model plots given the output of an ageModel run.
