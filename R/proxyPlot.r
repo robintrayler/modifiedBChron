@@ -60,6 +60,7 @@ proxyPlot <- function(proxySmoothOutput,
        xlab = 'Position',
        ylab = 'Proxy')
   grid()
+
   ##---------------------------------------------------------------------------
   points(x = proxySmoothOutput$agePredictOutput$ConfInt[,1],
          y = proxySmoothOutput$proxy,
