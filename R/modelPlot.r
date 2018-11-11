@@ -4,14 +4,16 @@
 #' @param agePredictOutput Output of the agePredict function. If specified, points and error bars will be added to the age model plots for the predicted points
 #' @param scale Scaling factor for age PDFs
 #' @param predictLabels should predicted ages for points be displayed?
+#' @param type c('PDF', contour') Shound probability be displayed as likelihood input PDFs or as contours of posterior probability. Defaults to PDF
 #' @param ... Optional arguments to be passed to plot (xlim, ylim, xlab, ylab, main)
 #' @export
 #
 
 modelPlot <- function(model,
-                    agePredictOutput = NA,
-                    predictLabels = T,
-                    scale = 1,...){
+                      agePredictOutput = NA,
+                      predictLabels = T,
+                      scale = 1,
+                      type = 'PDF',...){
   ##-------------------------------------------------------------------------
   ## create a scaling factor and color ramp for likelihood PDFs
   scl <- (diff(range(model$predictPositions)) / ncol(model$thetas)) / max(model$nAges) * scale
@@ -61,40 +63,59 @@ modelPlot <- function(model,
         lwd = 2)
   ##-------------------------------------------------------------------------
   ## add polygons for each likelihood PDF
-  for(i in ncol(model$thetas):1){
-    polygon(y = model$likelihoods[, i] / max(model$likelihoods[, i]) * scl +  model$masterPositions[i],
-            x = model$ageGrid,
-            border = NA,
-            col = cols[i])
-    ##-------------------------------------------------------------------------
-    if(all(!is.na(agePredictOutput))){
-      l <- nrow(agePredictOutput$ConfInt)
-      for(i in 1:l){
-        arrows(x0 = agePredictOutput$ConfInt[i, 2],
-               y0 = agePredictOutput$ConfInt[i, 1],
-               x1 = agePredictOutput$ConfInt[i, 4],
-               y1 = agePredictOutput$ConfInt[i, 1],
-               length = 0.025,
-               angle = 90,
-               code = 3,
-               lwd = 2,
-               col = rgb(0.97, 0.46, 0.43, .5))
-        points(agePredictOutput$ConfInt[i, 3],
-               agePredictOutput$ConfInt[i, 1],
-               pch = 21,
-               bg = rgb(0.97, 0.46, 0.43, .5))
-        if(predictLabels == T){
-          minus <- as.numeric(round(agePredictOutput$ConfInt[i, 3] - agePredictOutput$ConfInt[i, 2], 3))
-          plus <- as.numeric(round(agePredictOutput$ConfInt[i, 4] - agePredictOutput$ConfInt[i, 3], 3))
-          median <- as.numeric(round(agePredictOutput$ConfInt[i, 3],3))
-          text(x = agePredictOutput$ConfInt[i, 4],
-               y = agePredictOutput$ConfInt[i, 1],
-               paste(median, '+', plus,'/ -',minus), cex = 0.6,
-               pos = 2)
-        }
+  if(type == 'PDF'){
+    for(i in ncol(model$thetas):1){
+      polygon(y = model$likelihoods[, i] / max(model$likelihoods[, i]) * scl +  model$masterPositions[i],
+              x = model$ageGrid,
+              border = NA,
+              col = cols[i])
+    }
+  }
+  ##-------------------------------------------------------------------------
+  if(type == 'contour'){
+    for(n in 1:ncol(model$thetas)){
+      x <- MASS::kde2d(model$thetas[model$burn:model$MC, n],
+                       jitter(model$positionStore[model$burn:model$MC, n],amount = 0.01),
+                       n = 100)
+      x$z <- x$z/max(x$z)
+      #image(x,add = T,col = colorRampPalette(c(rgb(0,0,0,0),rainbow(ncol(model$thetas),alpha = .5)[n]),alpha = 1)(10))
+      contour(x,
+              add = T,
+              nlevels = 5,
+              drawlabels = F,
+              col = cols[n])
+    }
+  }
+  ##-------------------------------------------------------------------------
+  if(all(!is.na(agePredictOutput))){
+    l <- nrow(agePredictOutput$ConfInt)
+    for(i in 1:l){
+      arrows(x0 = agePredictOutput$ConfInt[i, 2],
+             y0 = agePredictOutput$ConfInt[i, 1],
+             x1 = agePredictOutput$ConfInt[i, 4],
+             y1 = agePredictOutput$ConfInt[i, 1],
+             length = 0.025,
+             angle = 90,
+             code = 3,
+             lwd = 2,
+             col = rgb(0.97, 0.46, 0.43, .5))
+      points(agePredictOutput$ConfInt[i, 3],
+             agePredictOutput$ConfInt[i, 1],
+             pch = 21,
+             bg = rgb(0.97, 0.46, 0.43, .5))
+      if(predictLabels == T){
+        minus <- as.numeric(round(agePredictOutput$ConfInt[i, 3] - agePredictOutput$ConfInt[i, 2], 3))
+        plus <- as.numeric(round(agePredictOutput$ConfInt[i, 4] - agePredictOutput$ConfInt[i, 3], 3))
+        median <- as.numeric(round(agePredictOutput$ConfInt[i, 3],3))
+        text(x = agePredictOutput$ConfInt[i, 4],
+             y = agePredictOutput$ConfInt[i, 1],
+             paste(median, '+', plus,'/ -',minus), cex = 0.6,
+             pos = 2)
       }
     }
   }
+
+
   legend('bottomright',
          lwd = c(2,NA),
          pch = c(NA, 15),
@@ -108,167 +129,3 @@ modelPlot <- function(model,
          cex = .75,
          ncol = 3)
 }
-# modelPlot <- function(model,agePredictOutput = NA,scale = 1,PDF = F,...){
-#   ## This function produces plots from the output object of the modified bchron age-depth model
-#   ## INPUTS
-#   ## model = output of the modified bchron age-depth model
-#   ## PDF = c(T,F). If TRUE plots will be printed to a PDF in the current working directory, else plots are displated in R
-#   scl <- (diff(range(model$predictPositions))/ncol(model$thetas))/max(model$nAges)*scale # scaling factor for ploting age PDFs
-#   colsPal <- colorRampPalette(c('#d7191c',
-#                                 '#fdae61',
-#                                 '#ffffbf',
-#                                 '#abd9e9',
-#                                 '#2c7bb6'))
-#   cols <- colsPal(ncol(model$thetas))
-#
-#   ##---------------------------------------------------------------------------
-#   ## if PDF is true print the plots to a PDF file instead
-#   if(PDF == T){
-#     pdf(file = 'AgeModelPlots.pdf',
-#         width = 10,
-#         height = 10)
-#   }
-#   # ##---------------------------------------------------------------------------
-#   # ## depth on x axis
-#   # ## time on y axis
-#   # ## set x and y limits
-#   # ylims <- c(model$confInt[3,1],
-#   #            model$confInt[1,length(model$predictPositions)]) # ylimit scaling
-#   # xlims <- c(min(model$predictPositions),
-#   #            max(model$predictPositions)+ scl)  # xlimit scaling
-#   # ##---------------------------------------------------------------------------
-#   # # open a blank plot
-#   # plot(NA,
-#   #      xlim = xlims,
-#   #      ylim = ylims,
-#   #      xlab = 'Position',
-#   #      ylab = 'Age',
-#   #      tcl = .25,
-#   #      type = 'n',
-#   #      main = 'Position - Age Plot')
-#   # grid() # add gridlines
-#   #
-#   # ##---------------------------------------------------------------------------
-#   # # add a shaded polygon of the 95% HDI
-#   # polygon(y = c(model$confInt[1,],
-#   #               rev(model$confInt[3,])),
-#   #         x = c(model$predictPositions,
-#   #               rev(model$predictPositions)),
-#   #         col = rgb(0,0,0,.25),
-#   #         border = NA)
-#   # ##---------------------------------------------------------------------------
-#   # ## add a line for the median model
-#   # lines(x = model$predictPositions,y = model$confInt[2,],lwd = 2)
-#   #
-#   # ##---------------------------------------------------------------------------
-#   # ## add the likelihood polygons
-#   # for(i in ncol(model$thetas):1){
-#   #   polygon(x = model$likelihoods[,i] / max(model$likelihoods[,i])*scl +  model$masterPositions[i],
-#   #           y = model$ageGrid,
-#   #           border = NA,
-#   #           col = cols[i])
-#   # }
-#   # ##---------------------------------------------------------------------------
-#   # ## if there is age predictions to add add them
-#   # if(all(!is.na(agePredictOutput))){
-#   #   l <- nrow(agePredictOutput$ConfInt)
-#   #   for(i in 1:l){
-#   #     level <- agePredictOutput$ConfInt[i,1]
-#   #     low <- agePredictOutput$ConfInt[i,2]
-#   #     mid <- high <- agePredictOutput$ConfInt[i,3]
-#   #     high <- agePredictOutput$ConfInt[i,4]
-#   #     arrows(level,low,level,high,length = 0,lwd = 2,col = 'steelblue')
-#   #     points(level,mid,pch = 19,col = 'steelblue')
-#   #   }
-#   # }
-#   # ##---------------------------------------------------------------------------
-#   # ## add some legends
-#   # legend('bottomright',
-#   #        legend = c('median','95% HDI'),
-#   #        fill = c('black',rgb(0,0,0,.5)),
-#   #        bty = 'n')
-#   # legend('topleft',
-#   #        legend = rev(model$ids),
-#   #        fill = rev(cols),
-#   #        bty = 'n',...)
-#
-#   ## depth on y axis
-#   ## time on x axis
-#   ##---------------------------------------------------------------------------
-#   ## set x and y limits
-#   xlims <- c(model$confInt[3,1],
-#              model$confInt[1,length(model$predictPositions)])
-#   ylims <- c(min(model$predictPositions),
-#              max(model$predictPositions)+ scl)
-#   plot(NA,
-#        xlim = xlims,
-#        ylim = ylims,
-#        xlab = 'Age',
-#        ylab = 'Position',
-#        tcl = .25,
-#        type = 'n')
-#   grid()
-#   ##---------------------------------------------------------------------------
-#   # add a shaded polygon of the 95% HDI
-#   polygon(x = c(model$confInt[1,],
-#                 rev(model$confInt[3,])),
-#           y = c(model$predictPositions,
-#                 rev(model$predictPositions)),
-#           col = rgb(0,0,0,.25),
-#           border = NA)
-#   ##---------------------------------------------------------------------------
-#   ## add a line for the median model
-#   lines(y = model$predictPositions,
-#         x = model$confInt[2,],
-#         lwd = 2)
-#
-#   ##---------------------------------------------------------------------------
-#   ## add the likelihood polygons
-#   for(i in ncol(model$thetas):1){
-#     polygon(y = model$likelihoods[,i]/max(model$likelihoods[,i])*scl +  model$masterPositions[i],
-#             x = model$ageGrid,
-#             border = NA,
-#             col = cols[i])
-#   }
-#
-#   ##---------------------------------------------------------------------------
-#   ## if there is age predictions to add add them
-#   if(all(!is.na(agePredictOutput))){
-#     l <- nrow(agePredictOutput$ConfInt)
-#     for(i in 1:l){
-#       level <- agePredictOutput$ConfInt[i, 1]
-#       low <- agePredictOutput$ConfInt[i, 2]
-#       mid <- high <- agePredictOutput$ConfInt[i, 3]
-#       high <- agePredictOutput$ConfInt[i, 4]
-#       arrows(low,
-#              level,
-#              high,
-#              level,
-#              length = 0.025,
-#              angle = 90,
-#              code = 3,
-#              lwd = 2,
-#              col = rgb(0.97, 0.46, 0.43, .5))
-#       points(mid,
-#              level,
-#              pch = 21,
-#              bg = rgb(0.97, 0.46, 0.43, .5))
-#     }
-#   }
-#
-#   ##---------------------------------------------------------------------------
-#   ## add some legends
-#   legend('bottomright',
-#          lwd = c(2,NA),
-#          pch = c(NA, 15),
-#          legend = c('median','95% HDI'),
-#          col = c('black',rgb(0,0,0,.5)),
-#          bty = 'n')
-#   legend('topleft',
-#          legend = rev(model$ids),
-#          fill = rev(cols),
-#          bty = 'n',...)
-#   if(PDF == T){
-#     dev.off()
-#   }
-# }

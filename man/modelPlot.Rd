@@ -4,7 +4,8 @@
 \alias{modelPlot}
 \title{This function generates two age model plots given the output of an ageModel run.}
 \usage{
-modelPlot(model, agePredictOutput = NA, predictLabels = T, scale = 1, ...)
+modelPlot(model, agePredictOutput = NA, predictLabels = T, scale = 1,
+  type = "PDF", ...)
 }
 \arguments{
 \item{model}{Output of the \code{ageModel} function}
@@ -14,6 +15,8 @@ modelPlot(model, agePredictOutput = NA, predictLabels = T, scale = 1, ...)
 \item{predictLabels}{should predicted ages for points be displayed?}
 
 \item{scale}{Scaling factor for age PDFs}
+
+\item{type}{c('PDF', Contour') Shound probability be displayed as likelihood input PDFs or as contours of posterior probability. Defaults to PDF}
 
 \item{...}{Optional arguments to be passed to plot (xlim, ylim, xlab, ylab, main)}
 }
