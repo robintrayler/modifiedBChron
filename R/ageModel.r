@@ -439,6 +439,23 @@ ageModel <- function(ages,
     }
   }
   ##-----------------------------------------------------------------------------
+  ## check to see if posterior and likelihood distributions oberlap at the specified confidence
+  ## if they don't flag them for the user to review
+  isOutlier <- function(probability){
+    outlier <- vector(length = ncol(thetaStore))
+    for(i in 1:ncol(thetaStore)){
+      f <- approxfun(x = cumsum(prob[, i]),
+                     y = ageGrid)
+      likelihood <- f(c((1 - probability) / 2, 0.5, (1 + probability) / 2))
+      posterior <- as.numeric(quantile(thetaStore[burn:MC, i],
+                                       prob = c((1 - probability) / 2, 0.5, (1 + probability) / 2)))
+      outlier[i] <- !(any(posterior > likelihood[1]) & any(posterior < likelihood[3]))
+    }
+    return(outlier)
+  }
+
+  outliers <- isOutlier(probability = probability)
+  ##-----------------------------------------------------------------------------
 
   return(list(confInt = apply(modelStore[,burn:MC], 1, quantile,c((1 - probability) / 2, 0.5 , (1 + probability) / 2)),
               model = modelStore[,burn:MC],
@@ -456,7 +473,8 @@ ageModel <- function(ages,
               muSDStore = muSDStore,
               mhSDStore = mhSDStore,
               burn = burn,
-              MC = MC))
+              MC = MC,
+              outliers = outliers))
 }
 
 
