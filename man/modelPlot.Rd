@@ -16,7 +16,7 @@ modelPlot(model, agePredictOutput = NA, predictLabels = T, scale = 1,
 
 \item{scale}{Scaling factor for age PDFs}
 
-\item{type}{c('PDF', Contour') Shound probability be displayed as likelihood input PDFs or as contours of posterior probability. Defaults to PDF}
+\item{type}{c('PDF', contour') Shound probability be displayed as likelihood input PDFs or as contours of posterior probability. Defaults to PDF}
 
 \item{...}{Optional arguments to be passed to plot (xlim, ylim, xlab, ylab, main)}
 }

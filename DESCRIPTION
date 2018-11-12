@@ -1,7 +1,7 @@
 Package: modifiedBChron
 Type: Package
 Title: Run A Modified Version of the Compound Poison-Gamma Chronology Model of Haslett and Parnell, 2008
-Version: 0.5.0
+Version: 0.6.0
 Author: Robin Trayler
 Maintainer: Robin B. Trayler <robintrayler@gmail.com>
 Description: More about what it does (maybe more than one line)

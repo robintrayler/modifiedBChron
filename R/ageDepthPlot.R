@@ -19,6 +19,7 @@ ageDepthPlot <- function(ages,
                          scale = 1,...){
   ##---------------------------------------------------------------------------
   ## function for creating a summed PDF
+
   sumPDF <- function(ages,ageSds,distType,x){
     interval <- matrix(0,nrow = length(x), ncol=length(ages))
     for (i in 1:length(ages)) {
@@ -56,8 +57,12 @@ ageDepthPlot <- function(ages,
 
   ##---------------------------------------------------------------------------
   ## create the likelihood PDFs
-  prob <-matrix(0,nrow=100000,ncol=n) # create an empty matrix to store the probabilites
-  ageGrid <- seq(min(ages-ageSds*10),max(ages+ageSds*10),length.out=100000) # Grid of ages to evaluate over
+  prob <-matrix(0,
+                nrow=100000,
+                ncol=n) # create an empty matrix to store the probabilites
+  ageGrid <- seq(min(ages-ageSds*10),
+                 max(ages+ageSds*10),
+                 length.out=100000) # Grid of ages to evaluate over
   for(j in 1:n){
     prob[,j] <- sumPDF(ages = ages[ids == samples[j]],
                        ageSds = ageSds[ids == samples[j]],
@@ -74,8 +79,10 @@ ageDepthPlot <- function(ages,
                                 '#abd9e9',
                                 '#2c7bb6'))
   cols <- colsPal(n)
-  xlimit <- c(max(ages+ageSds*5),min(ages-ageSds*5))
-  ylimit <- c(min(currPositions)-scl,max(currPositions)+scl)
+  xlimit <- c(max(ages + ageSds * 5),
+              min(ages - ageSds * 5))
+  ylimit <- c(min(currPositions) - scl,
+              max(currPositions) + scl)
 
   ##---------------------------------------------------------------------------
   ## open up an empty plot
@@ -90,7 +97,7 @@ ageDepthPlot <- function(ages,
   ##---------------------------------------------------------------------------
   ## add likelhood PDFs
   for(i in n:1){
-    polygon(y = prob[,i]/max(prob[,i])*scl +  currPositions[i],
+    polygon(y = prob[, i] / max(prob[, i]) * scl +  currPositions[i],
             x = ageGrid,
             border = NA,
             col = cols[i])
@@ -105,7 +112,7 @@ ageDepthPlot <- function(ages,
                x1 =  mean(ages[ids == samples[i]]),
                y0 = currPositions[i] - thicknesses[i],
                y1 = currPositions[i] + thicknesses[i],
-               length = .05,,
+               length = .05,
                code = 3,
                lwd = 2,
                angle = 90)
