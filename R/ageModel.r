@@ -456,7 +456,13 @@ ageModel <- function(ages,
 
   outliers <- isOutlier(probability = probability)
   ##-----------------------------------------------------------------------------
-
+  ## print a warning if any of the input ages do not overlap the model posterior at the specified probability
+  if(any(outliers)){
+    for(i in 1:length(ids[outliers])){
+      warning(paste('sample', ids[outliers][i],'posterior distribution', probability*100,'% HDI', 'does not overlap the input likelihood. Consider screening for outliers.'))
+    }
+  }
+  ##-----------------------------------------------------------------------------
   return(list(confInt = apply(modelStore[,burn:MC], 1, quantile,c((1 - probability) / 2, 0.5 , (1 + probability) / 2)),
               model = modelStore[,burn:MC],
               thetas = thetaStore,

@@ -85,14 +85,36 @@ ageDepthPlot <- function(ages,
               max(currPositions) + scl)
 
   ##---------------------------------------------------------------------------
-  ## open up an empty plot
-  plot(NA,type = 'n',
-       xlim = xlimit,
-       ylim = ylimit,
-       tcl = .25,
-       xlab = 'Age',
-       ylab = 'Position')
-  grid()
+  ## get a list of optional arguments
+  ex <- list(...)
+  ##-------------------------------------------------------------------------
+  ## assign some default arguments if things arent specified
+  ## default x limits
+  if(is.null(ex$xlim)){ex$xlim = xlimit}
+  ## default y limits
+  if(is.null(ex$ylim)){ex$ylim = ylimit}
+  ## default x label
+  if(is.null(ex$xlab)){ex$xlab = 'Age'}
+  ## default y label
+  if(is.null(ex$ylab)){ex$ylab = 'Position'}
+  ## required defaults
+  ex$tcl = 0.25
+  ex$x = 1
+  ex$y = 1
+  ex$type = 'n'
+  args <- ex
+  ##-------------------------------------------------------------------------
+  ## open up a blank plot
+  do.call('plot', args)
+  graphics::grid()
+  # ## open up an empty plot
+  # plot(NA,type = 'n',
+  #      xlim = xlimit,
+  #      ylim = ylimit,
+  #      tcl = .25,
+  #      xlab = 'Age',
+  #      ylab = 'Position')
+  # grid()
 
   ##---------------------------------------------------------------------------
   ## add likelhood PDFs
@@ -122,9 +144,10 @@ ageDepthPlot <- function(ages,
 
   ##---------------------------------------------------------------------------
   # ## add a legend
-  # legend('bottomright',legend = 'Thicknesses',lwd = 2, bty = 'n')
   legend('topleft',
-         legend = rev(samples),
+         legend = rev(ids),
          fill = rev(cols),
-         bty = 'n',...)
+         bty = 'n',
+         cex = .75,
+         ncol = 4)
 }

@@ -127,5 +127,5 @@ modelPlot <- function(model,
          fill = rev(cols),
          bty = 'n',
          cex = .75,
-         ncol = 3)
+         ncol = 4)
 }
