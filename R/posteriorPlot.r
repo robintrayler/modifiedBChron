@@ -40,11 +40,12 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
   text(x = quantile(model$mu, c(lowerP,.5,upperP)),
        y = max(h$density)*.8,
        labels = round(quantile(model$mu, c(lowerP,.5,upperP)), sigF),
-       col = 'tomato', cex = 1.5,
+       col = 'black', cex = 1.5,
        pos = 4)
   abline(v = quantile(model$mu,c(lowerP,.5,upperP)),
-         col = 'tomato',
-         lwd = 2)
+         col = 'black',
+         lwd = 2,
+         lty = 2)
 
   ylim = c(max(0,mean(model$mu) - 4*sd(model$mu)),
            mean(model$mu) + 8*sd(model$mu))
@@ -85,7 +86,7 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
           y = c(0,0,max(ylim)+0.1*max(ylim),max(ylim)+0.1*max(ylim)),
           border = NA,
           col = rgb(0,0,0,.25))
-  abline(h = quantile(model$muSDStore,.5),
+  abline(h = quantile(model$muSDStore, .5),
          col = 'tomato',
          lwd = 2)
 
@@ -109,11 +110,13 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
   text(x = quantile(model$psi, c(lowerP,.5,upperP)),
        y = max(h$density)*.8,
        labels = round(quantile(model$psi, c(lowerP,.5,upperP)), sigF),
-       col = 'tomato', cex = 1.5,
+       col = 'black',
+       cex = 1.5,
        pos = 4)
   abline(v = quantile(model$psi,c(lowerP,.5,upperP)),
-         col = 'tomato',
-         lwd = 2)
+         col = 'black',
+         lwd = 2,
+         lty = 2)
   ##----------------------------------------------------------------------------
   ## make psi trace plots
   ylim = c(max(0, mean(model$psi)-sd(model$psi)*4),
@@ -175,13 +178,14 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
                main = model$ids[i])
     box()
     abline(v = quantile(model$thetas[,i],c(lowerP,.5,upperP)),
-           col = 'tomato',
+           col = 'black',
            lwd = 2,
            lty = 2)
     text(x = quantile(model$thetas[, i], c(lowerP,.5,upperP)),
          y = max(h$density)*.8,
          labels = round(quantile(model$thetas[, i], c(lowerP,.5,upperP)), sigF),
-         col = 'tomato', cex = 1.5,
+         col = 'black',
+         cex = 1.5,
          pos = 4)
     ##----------------------------------------------------------------------------
     ylim = c(max(0,mean(model$thetas[,i]) - 4*sd(model$thetas[,i])),
