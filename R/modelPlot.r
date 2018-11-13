@@ -119,7 +119,7 @@ modelPlot <- function(model,
   legend('bottomright',
          lwd = c(2,NA),
          pch = c(NA, 15),
-         legend = c('median','95% HDI'),
+         legend = c('median',paste(paste(model$probability*100,'%',sep = ''),'HDI')),
          col = c('black', rgb(0,0,0,.5)),
          bty = 'n')
   legend('topleft',

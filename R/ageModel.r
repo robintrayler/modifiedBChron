@@ -480,7 +480,8 @@ ageModel <- function(ages,
               mhSDStore = mhSDStore,
               burn = burn,
               MC = MC,
-              outliers = outliers))
+              outliers = outliers,
+              probability = probability))
 }
 
 
