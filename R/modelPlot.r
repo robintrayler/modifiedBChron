@@ -50,8 +50,8 @@ modelPlot <- function(model,
   graphics::grid()
   ##-------------------------------------------------------------------------
   ## draw a polygon for the confidence interval
-  polygon(x = c(model$HDI[1,],
-                rev(model$HDI[3,])),
+  polygon(x = c(model$HDI[1, ],
+                rev(model$HDI[3, ])),
           y = c(model$predictPositions,
                 rev(model$predictPositions)),
           col = rgb(0,0,0,.25),
@@ -59,7 +59,7 @@ modelPlot <- function(model,
   ##-------------------------------------------------------------------------
   ## add a line for the median
   lines(y = model$predictPositions,
-        x = model$confInt[2,],
+        x = model$HDI[2, ],
         lwd = 2)
   ##-------------------------------------------------------------------------
   ## add polygons for each likelihood PDF
