@@ -18,7 +18,7 @@
 #' @param truncateDown Truncation age for extrapolation below the bottom of the section. Defaults to 1e10 (a really big number)
 #' @param extrapUp Number of extrapolations to perform above the top of the section. defaults to 100
 #' @param extrapDown Number of extrapolations to perform below the bottom of the section. defaults to 100
-#' @return ConfInt = 95 percent confidence intervals for the model run
+#' @return HDI = 95 percent highest density interval for the model run
 #' @return model = Raw model predictions for each MCMC iteration
 #' @return thetas = The posterior values for each dated horizon from each MCMC run. burn is not removed.
 #' @return predictPositions = Stratigraphic positions where the model was evaluated. Same as \code{predictPositions}
@@ -463,7 +463,7 @@ ageModel <- function(ages,
     }
   }
   ##-----------------------------------------------------------------------------
-  return(list(confInt = apply(modelStore[,burn:MC], 1, quantile,c((1 - probability) / 2, 0.5 , (1 + probability) / 2)),
+  return(list(HDI = apply(modelStore[,burn:MC], 1, quantile,c((1 - probability) / 2, 0.5 , (1 + probability) / 2)),
               model = modelStore[,burn:MC],
               thetas = thetaStore,
               positionStore = positionStore,

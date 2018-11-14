@@ -5,7 +5,7 @@
 #' @param grid vector of positions to evaluate the smoothing model at
 #' @param method Smoothing method to use. currently supported methods are 'spline', 'movingAverage' and 'polynomial'
 #' @param smoothParameter parameter to use for smoothing. If method = 'spline' \code{smoothParameter} should be between 0 and 1. see \code{smooth.spline} for details. If method = 'movingAverage' \code{smoothParameter} is the width of the smoothing window in units of time used by the age-depth model. If method = 'polynomial' \code{smoothParameter} is the degree of polynomial to fit
-#' @param HDI desired probability interval to return. Must be between 0 and 1
+#' @param probability desired probability interval to return. Must be between 0 and 1
 #' @export
 #'
 proxySmooth <- function(proxy,
@@ -14,7 +14,7 @@ proxySmooth <- function(proxy,
                         grid,
                         method = c('spline','movingAverage','polynomial'),
                         smoothParameter = 1,
-                        HDI = .95){
+                        probability = .95){
 
   # movingAverage Smoothing Function --------------------------------------------
   if(method == 'movingAverage'){
@@ -82,16 +82,16 @@ proxySmooth <- function(proxy,
   }
 
   ## calculate the
-  confInt <- apply(X = modelStore,
+  HDI <- apply(X = modelStore,
                    MARGIN = 1, FUN = quantile,
-                   prob = c((1 - HDI)/2, 0.5, (1 + HDI)/2), na.rm = T)
-  return(list(HDI = confInt,
+                   prob = c((1 - probability)/2, 0.5, (1 + probability)/2), na.rm = T)
+  return(list(HDI = HDI,
               raw = modelStore,
               proxy = proxy,
               agePredictOutput = agePredictOutput,
               method = method,
               smoothParameter = smoothParameter,
-              HDI = HDI,
+              probability = probability,
               grid = grid))
 }
 

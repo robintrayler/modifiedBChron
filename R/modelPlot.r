@@ -29,8 +29,8 @@ modelPlot <- function(model,
   ##-------------------------------------------------------------------------
   ## assign some default arguments if things arent specified
   ## default x limits
-  if(is.null(ex$xlim)){ex$xlim = as.numeric(c(model$confInt[3, 1],
-                                              model$confInt[1, length(model$predictPositions)]))}
+  if(is.null(ex$xlim)){ex$xlim = as.numeric(c(model$HDI[3, 1],
+                                              model$HDI[1, length(model$predictPositions)]))}
   ## default y limits
   if(is.null(ex$ylim)){ex$ylim = c(min(model$predictPositions),
                                    max(model$predictPositions) + scl)}
@@ -50,8 +50,8 @@ modelPlot <- function(model,
   graphics::grid()
   ##-------------------------------------------------------------------------
   ## draw a polygon for the confidence interval
-  polygon(x = c(model$confInt[1,],
-                rev(model$confInt[3,])),
+  polygon(x = c(model$HDI[1,],
+                rev(model$HDI[3,])),
           y = c(model$predictPositions,
                 rev(model$predictPositions)),
           col = rgb(0,0,0,.25),
@@ -75,7 +75,7 @@ modelPlot <- function(model,
   if(type == 'contour'){
     for(n in 1:ncol(model$thetas)){
       x <- MASS::kde2d(model$thetas[model$burn:model$MC, n],
-                       jitter(model$positionStore[model$burn:model$MC, n],amount = 0.01),
+                       jitter(model$positionStore[model$burn:model$MC, n], amount = 0.01),
                        n = 100)
       x$z <- x$z/max(x$z)
       #image(x,add = T,col = colorRampPalette(c(rgb(0,0,0,0),rainbow(ncol(model$thetas),alpha = .5)[n]),alpha = 1)(10))
@@ -88,27 +88,27 @@ modelPlot <- function(model,
   }
   ##-------------------------------------------------------------------------
   if(all(!is.na(agePredictOutput))){
-    l <- nrow(agePredictOutput$ConfInt)
+    l <- nrow(agePredictOutput$HDI)
     for(i in 1:l){
-      arrows(x0 = agePredictOutput$ConfInt[i, 2],
-             y0 = agePredictOutput$ConfInt[i, 1],
-             x1 = agePredictOutput$ConfInt[i, 4],
-             y1 = agePredictOutput$ConfInt[i, 1],
+      arrows(x0 = agePredictOutput$HDI[i, 2],
+             y0 = agePredictOutput$HDI[i, 1],
+             x1 = agePredictOutput$HDI[i, 4],
+             y1 = agePredictOutput$HDI[i, 1],
              length = 0.025,
              angle = 90,
              code = 3,
              lwd = 2,
              col = rgb(0.97, 0.46, 0.43, .5))
-      points(agePredictOutput$ConfInt[i, 3],
-             agePredictOutput$ConfInt[i, 1],
+      points(agePredictOutput$HDI[i, 3],
+             agePredictOutput$HDI[i, 1],
              pch = 21,
              bg = rgb(0.97, 0.46, 0.43, .5))
       if(predictLabels == T){
-        minus <- as.numeric(round(agePredictOutput$ConfInt[i, 3] - agePredictOutput$ConfInt[i, 2], 3))
-        plus <- as.numeric(round(agePredictOutput$ConfInt[i, 4] - agePredictOutput$ConfInt[i, 3], 3))
-        median <- as.numeric(round(agePredictOutput$ConfInt[i, 3],3))
-        text(x = agePredictOutput$ConfInt[i, 4],
-             y = agePredictOutput$ConfInt[i, 1],
+        minus <- as.numeric(round(agePredictOutput$HDI[i, 3] - agePredictOutput$HDI[i, 2], 3))
+        plus <- as.numeric(round(agePredictOutput$HDI[i, 4] - agePredictOutput$HDI[i, 3], 3))
+        median <- as.numeric(round(agePredictOutput$HDI[i, 3],3))
+        text(x = agePredictOutput$HDI[i, 4],
+             y = agePredictOutput$HDI[i, 1],
              paste(median, '+', plus,'/ -',minus), cex = 0.6,
              pos = 2)
       }
