@@ -6,7 +6,7 @@
 \usage{
 proxySmooth(proxy, proxySD = rep(0, length(proxy)), agePredictOutput, grid,
   method = c("spline", "movingAverage", "polynomial"), smoothParameter = 1,
-  HDI = 0.95)
+  probability = 0.95)
 }
 \arguments{
 \item{proxy}{Vector proxy compostions. must be numeric}
@@ -21,7 +21,7 @@ proxySmooth(proxy, proxySD = rep(0, length(proxy)), agePredictOutput, grid,
 
 \item{smoothParameter}{parameter to use for smoothing. If method = 'spline' \code{smoothParameter} should be between 0 and 1. see \code{smooth.spline} for details. If method = 'movingAverage' \code{smoothParameter} is the width of the smoothing window in units of time used by the age-depth model. If method = 'polynomial' \code{smoothParameter} is the degree of polynomial to fit}
 
-\item{HDI}{desired probability interval to return. Must be between 0 and 1}
+\item{probability}{desired probability interval to return. Must be between 0 and 1}
 }
 \description{
 This function uses a Monte Carlo aproach to repetedly fit a smoothing model to some proxy data incorperating the model uncertanties in age

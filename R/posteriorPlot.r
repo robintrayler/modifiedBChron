@@ -1,4 +1,5 @@
 #' Make plots of modeled posteriors from the output of an ageModel run
+#'
 #' @param model Output of the \code{ageModel} function
 #' @param prob Desired level of probability for HDI's. Defaults to 95%
 #' @param sifF number of decimal places to display on histograms

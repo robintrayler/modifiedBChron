@@ -50,7 +50,7 @@ ageModel(ages, ageSds, positions, positionThicknesses = rep(0,
 \item{prob}{Desired confidence to return. Defaults to 95% HDI}
 }
 \value{
-ConfInt = 95 percent confidence intervals for the model run
+HDI = 95 percent highest density interval for the model run
 
 model = Raw model predictions for each MCMC iteration
 
@@ -69,8 +69,6 @@ nAges = Number of ages that were combined into each sample. Useful for plotting
 masterPositions = Stratigraphic positions for each set of combined ages. Useful for plotting
 
 ids = Vector of unique sample names. Useful for plotting
-
-psiSDStore, muSDStore, mhSDStore = proposal standard deviations for each model parameter throughout the MCMC run. burn is not removed.
 }
 \description{
 Run a modified version of the Bchronology algorithm from the R package "Bchron" (Haslett and Parnell, 2008)

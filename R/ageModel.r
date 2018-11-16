@@ -28,9 +28,8 @@
 #' @return nAges = Number of ages that were combined into each sample. Useful for plotting
 #' @return masterPositions = Stratigraphic positions for each set of combined ages. Useful for plotting
 #' @return ids = Vector of unique sample names. Useful for plotting
-#' @return psiSDStore, muSDStore, mhSDStore = proposal standard deviations for each model parameter throughout the MCMC run. burn is not removed.
-#' @useDynLib modifiedBChron
 #'
+#' @useDynLib modifiedBChron
 #' @export
 
 ageModel <- function(ages,

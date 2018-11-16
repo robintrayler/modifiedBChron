@@ -5,7 +5,7 @@
 \title{This function is used to predict the age of new stratigraphic points using the output from an ageModel run.}
 \usage{
 agePredict(model, newPositions, newPositionThicknesses = rep(0,
-  length(newPositions)))
+  length(newPositions)), probability = 0.95)
 }
 \arguments{
 \item{model}{Output of the \code{ageModel} function}
@@ -15,7 +15,7 @@ agePredict(model, newPositions, newPositionThicknesses = rep(0,
 \item{newPositionThicknesses}{Vector of stratigraphic uncertanties for each position. Specified as half thicknesses. Must be the same length and given in the same order as \code{newPositions}. Default is no positional uncertanty}
 }
 \value{
-ConfInt = 95 percent confidence interval for each \code{newPosition}
+HDI = 95 percent Highest Density Interval for each \code{newPosition}
 
 raw = Age predictions for each \code{newPosition} for each MCMC run.
 }
