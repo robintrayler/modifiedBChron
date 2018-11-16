@@ -145,7 +145,7 @@ ageDepthPlot <- function(ages,
   ##---------------------------------------------------------------------------
   # ## add a legend
   legend('topleft',
-         legend = rev(ids),
+         legend = unique(rev(ids)),
          fill = rev(cols),
          bty = 'n',
          cex = .75,
