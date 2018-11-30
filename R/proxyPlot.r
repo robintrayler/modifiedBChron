@@ -23,7 +23,7 @@ proxyPlot <- function(proxySmoothOutput,
   }
 
   if(proxySmoothOutput$method == 'movingAverage' & stratSmoothParameter == 'default'){
-    stratSmoothParameter  <- abs(mean(diff(model$predictPositions))/mean(diff(model$confInt[2, ]))*proxySmoothOutput$smoothParameter)
+    stratSmoothParameter  <- abs(mean(diff(model$predictPositions))/mean(diff(model$HDI[2, ]))*proxySmoothOutput$smoothParameter)
   } else {
     stratSmoothParameter <- proxySmoothOutput$smoothParameter
   }
@@ -50,7 +50,7 @@ proxyPlot <- function(proxySmoothOutput,
   layout(rbind(c(1,1,2,2),c(1,1,3,3)))
   modelPlot(model = model, agePredictOutput = proxySmoothOutput$agePredictOutput)
   ##---------------------------------------------------------------------------
-  xlims <- range(proxySmoothOutput$agePredictOutput$ConfInt[,1])
+  xlims <- range(proxySmoothOutput$agePredictOutput$HDI[, 1])
   ylims <- range(proxySmoothOutput$proxy)
 
   plot(NA,
@@ -62,20 +62,20 @@ proxyPlot <- function(proxySmoothOutput,
   grid()
 
   ##---------------------------------------------------------------------------
-  points(x = proxySmoothOutput$agePredictOutput$ConfInt[,1],
+  points(x = proxySmoothOutput$agePredictOutput$HDI[,1],
          y = proxySmoothOutput$proxy,
          bg = rgb(0.97, 0.46, 0.43, 1),
          pch = 21,
          cex = 1.5)
   depthGrid = seq(min(xlims),max(xlims),length = 1000)
-  smooth <- smoothFun(x =  proxySmoothOutput$agePredictOutput$ConfInt[, 1],
+  smooth <- smoothFun(x =  proxySmoothOutput$agePredictOutput$HDI[, 1],
                       y = proxySmoothOutput$proxy,
                       grid = depthGrid,
                       smoothParameter = stratSmoothParameter)
   lines(depthGrid, smooth, lwd = 2)
 
   ##---------------------------------------------------------------------------
-  xlims <- rev(range(model$confInt[2, ]))
+  xlims <- rev(range(model$HDI[2, ]))
   ylims <- range(proxySmoothOutput$proxy)
   plot(NA,
        xlim = xlims,
@@ -84,8 +84,8 @@ proxyPlot <- function(proxySmoothOutput,
        xlab = 'Age',
        ylab = 'Proxy')
   grid()
-  arrows(x0 = proxySmoothOutput$agePredictOutput$ConfInt[ ,2],
-         x1 = proxySmoothOutput$agePredictOutput$ConfInt[ ,4],
+  arrows(x0 = proxySmoothOutput$agePredictOutput$HDI[ ,2],
+         x1 = proxySmoothOutput$agePredictOutput$HDI[ ,4],
          y0 = proxySmoothOutput$proxy,
          length = 0.05,
          angle = 90,
@@ -94,7 +94,7 @@ proxyPlot <- function(proxySmoothOutput,
          code = 3)
 
 
-  points(x = (proxySmoothOutput$agePredictOutput$ConfInt[,3]),
+  points(x = (proxySmoothOutput$agePredictOutput$HDI[, 3]),
          y = proxySmoothOutput$proxy,
          bg = rgb(0.97, 0.46, 0.43, 1),
          pch = 21,
