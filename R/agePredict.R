@@ -2,12 +2,14 @@
 #'
 #' @param model Output of the \code{ageModel} function
 #' @param newPositions Vector of new stratigraphic positions to predict the age of. New positions must be within the bounds of the orignal model run
+#' @param ids optional vector of names for new positions. Defaults to 1, 2, 3, ...
 #' @param newPositionThicknesses Vector of stratigraphic uncertanties for each position. Specified as half thicknesses. Must be the same length and given in the same order as \code{newPositions}. Default is no positional uncertanty
 #' @return HDI = 95 percent Highest Density Interval for each \code{newPosition}
 #' @return raw = Age predictions for each \code{newPosition} for each MCMC run.
 #' @export
 agePredict <- function(model,
                        newPositions,
+                       ids = 1:length(newPositions),
                        newPositionThicknesses = rep(0, length(newPositions)),
                        probability = 0.95){
   ## this function is used to predict the age of new points using a modified bchron output model
@@ -38,11 +40,15 @@ agePredict <- function(model,
     f <- approxfun(x, y)
     predictStore[i, ] <- t(f(currPositions))
   }
-  HDI <- t(apply(predictStore,2,quantile,c((1 - probability) / 2, 0.5, (1 + probability) / 2)))
-  HDI <- cbind(newPositions,HDI)
-  colnames(HDI)[1] <- 'Position'
+  HDI <- t(apply(predictStore,2,quantile, c((1 - probability) / 2, 0.5, (1 + probability) / 2)))
+  HDI <- cbind(newPositions, HDI)
+  HDI <- data.frame(HDI)
+  HDI$ids <- ids
+  colnames(HDI) <- c('newPositions', as.character(c((1 - probability) / 2, 0.5, (1 + probability) / 2)), 'ids')
+  # colnames(HDI)[1] <- 'ids'
+  # colnames(HDI)[2] <- 'Position'
   predictStore <- data.frame(predictStore)
-  colnames(predictStore) <- as.character(newPositions)
+  # colnames(predictStore) <- as.character(newPositions)
   return(list(HDI = HDI,
               raw = predictStore))
 }

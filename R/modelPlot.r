@@ -3,7 +3,7 @@
 #' @param model Output of the \code{ageModel} function
 #' @param agePredictOutput Output of the agePredict function. If specified, points and error bars will be added to the age model plots for the predicted points
 #' @param scale Scaling factor for age PDFs
-#' @param predictLabels should predicted ages for points be displayed?
+#' @param predictLabels c('ages','ids','both', NA) should predicted ages and names for for points be displayed? defaults to displaying both. Set to NA for no labels
 #' @param type c('PDF', contour') Shound probability be displayed as likelihood input PDFs or as contours of posterior probability. Defaults to PDF
 #' @param legend c('color', 'adjacent', NA) type of legend to be drawn. color draws color coded boxes for each sample, adjacent displays sample names next to each PDF. NA omits the legend.
 #' @param ... Optional arguments to be passed to plot (xlim, ylim, xlab, ylab, main)
@@ -12,7 +12,7 @@
 
 modelPlot <- function(model,
                       agePredictOutput = NA,
-                      predictLabels = T,
+                      predictLabels = 'both',
                       scale = 1,
                       type = 'PDF',
                       legend = 'color',
@@ -107,26 +107,33 @@ modelPlot <- function(model,
              agePredictOutput$HDI[i, 1],
              pch = 21,
              bg = rgb(0.97, 0.46, 0.43, .5))
-      if(predictLabels == T){
-        minus <- as.numeric(round(agePredictOutput$HDI[i, 3] - agePredictOutput$HDI[i, 2], 3))
-        plus <- as.numeric(round(agePredictOutput$HDI[i, 4] - agePredictOutput$HDI[i, 3], 3))
-        median <- as.numeric(round(agePredictOutput$HDI[i, 3],3))
-        text(x = agePredictOutput$HDI[i, 4],
-             y = agePredictOutput$HDI[i, 1],
-             paste(median, '+', plus,'/ -',minus), cex = 0.6,
-             pos = 2)
+      if(!is.na(predictLabels)){
+        if(predictLabels == 'ages' | predictLabels == 'both'){
+          minus <- as.numeric(round(agePredictOutput$HDI[i, 3] - agePredictOutput$HDI[i, 2], 3))
+          plus <- as.numeric(round(agePredictOutput$HDI[i, 4] - agePredictOutput$HDI[i, 3], 3))
+          median <- as.numeric(round(agePredictOutput$HDI[i, 3],3))
+          text(x = agePredictOutput$HDI[i, 4],
+               y = agePredictOutput$HDI[i, 1],
+               paste(median, '+', plus,'/ -',minus), cex = 0.6,
+               pos = 2)
+        }
+        if(predictLabels == 'ids' | predictLabels == 'both'){
+          text(x = agePredictOutput$HDI[i, 2],
+               y = agePredictOutput$HDI[i, 1],
+               labels = agePredictOutput$HDI$ids[i], cex = 0.6,
+               pos = 4)
+        }
       }
     }
   }
-
-
+  ##-------------------------------------------------------------------------
   legend('bottomright',
          lwd = c(2,NA),
          pch = c(NA, 15),
          legend = c('median',paste(paste(model$probability*100,'%',sep = ''),'HDI')),
          col = c('black', rgb(0,0,0,.5)),
          bty = 'n')
-
+  ##-------------------------------------------------------------------------
   if(!is.na(legend)){
     if(legend == 'color'){
       legend('topleft',
@@ -145,4 +152,5 @@ modelPlot <- function(model,
       }
     }
   }
+  ##-------------------------------------------------------------------------
 }
