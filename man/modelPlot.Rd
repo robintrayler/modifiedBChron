@@ -5,7 +5,7 @@
 \title{This function generates two age model plots given the output of an ageModel run.}
 \usage{
 modelPlot(model, agePredictOutput = NA, predictLabels = T, scale = 1,
-  type = "PDF", ...)
+  type = "PDF", legend = "color", ...)
 }
 \arguments{
 \item{model}{Output of the \code{ageModel} function}
@@ -17,6 +17,8 @@ modelPlot(model, agePredictOutput = NA, predictLabels = T, scale = 1,
 \item{scale}{Scaling factor for age PDFs}
 
 \item{type}{c('PDF', contour') Shound probability be displayed as likelihood input PDFs or as contours of posterior probability. Defaults to PDF}
+
+\item{legend}{c('color', 'adjacent', NA) type of legend to be drawn. color draws color coded boxes for each sample, adjacent displays sample names next to each PDF. NA omits the legend.}
 
 \item{...}{Optional arguments to be passed to plot (xlim, ylim, xlab, ylab, main)}
 }

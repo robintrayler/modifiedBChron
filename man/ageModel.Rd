@@ -8,7 +8,7 @@ ageModel(ages, ageSds, positions, positionThicknesses = rep(0,
   length(positions)), ids, distTypes = rep("G", length(ages)), MC = 10000,
   burn = 2000, probability = 0.95, adapt = TRUE, mhSD = rep(1,
   length(unique(ids))), psiSD = 1, muSD = 1,
-  predictPositions = seq(min(positions), max(positions), length = 100),
+  predictPositions = seq(min(positions), max(positions), length = 500),
   truncateUp = 0, extrapUp = 100, truncateDown = 1e+10,
   extrapDown = 100)
 }

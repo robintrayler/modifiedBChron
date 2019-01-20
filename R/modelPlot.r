@@ -5,6 +5,7 @@
 #' @param scale Scaling factor for age PDFs
 #' @param predictLabels should predicted ages for points be displayed?
 #' @param type c('PDF', contour') Shound probability be displayed as likelihood input PDFs or as contours of posterior probability. Defaults to PDF
+#' @param legend c('color', 'adjacent', NA) type of legend to be drawn. color draws color coded boxes for each sample, adjacent displays sample names next to each PDF. NA omits the legend.
 #' @param ... Optional arguments to be passed to plot (xlim, ylim, xlab, ylab, main)
 #' @export
 #
@@ -13,7 +14,9 @@ modelPlot <- function(model,
                       agePredictOutput = NA,
                       predictLabels = T,
                       scale = 1,
-                      type = 'PDF',...){
+                      type = 'PDF',
+                      legend = 'color',
+                      ...){
   ##-------------------------------------------------------------------------
   ## create a scaling factor and color ramp for likelihood PDFs
   scl <- (diff(range(model$predictPositions)) / ncol(model$thetas)) / max(model$nAges) * scale
@@ -50,6 +53,7 @@ modelPlot <- function(model,
   graphics::grid()
   ##-------------------------------------------------------------------------
   ## draw a polygon for the confidence interval
+
   polygon(x = c(model$HDI[1, ],
                 rev(model$HDI[3, ])),
           y = c(model$predictPositions,
@@ -122,10 +126,23 @@ modelPlot <- function(model,
          legend = c('median',paste(paste(model$probability*100,'%',sep = ''),'HDI')),
          col = c('black', rgb(0,0,0,.5)),
          bty = 'n')
-  legend('topleft',
-         legend = rev(model$ids),
-         fill = rev(cols),
-         bty = 'n',
-         cex = .75,
-         ncol = 4)
+
+  if(!is.na(legend)){
+    if(legend == 'color'){
+      legend('topleft',
+             legend = rev(model$ids),
+             fill = rev(cols),
+             bty = 'n',
+             cex = .75,
+             ncol = 4)
+    }
+    if(legend == 'adjacent'){
+      for(i in 1:length(model$ids)){
+        x <- model$ageGrid[which(cumsum(model$likelihoods[, i]) > .01 & cumsum(model$likelihoods[, i]) < .02)[1]]
+        y <- model$masterPositions[i]
+        t <- model$ids[i]
+        text(x = x, y = y, labels = t, pos = 4, cex = 0.6)
+      }
+    }
+  }
 }
