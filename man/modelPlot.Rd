@@ -12,7 +12,7 @@ modelPlot(model, agePredictOutput = NA, predictLabels = "both", scale = 1,
 
 \item{agePredictOutput}{Output of the agePredict function. If specified, points and error bars will be added to the age model plots for the predicted points}
 
-\item{predictLabels}{c('ages','ids','both', NA) should predicted ages and names for for points be displayed? defaults to displaying both. Set to NA for no labels}
+\item{predictLabels}{c('ages','ids','both', NA) should predicted ages and names for for points be displayed? Defaults to display both. Set to NA for no labels}
 
 \item{scale}{Scaling factor for age PDFs}
 

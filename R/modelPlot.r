@@ -3,7 +3,7 @@
 #' @param model Output of the \code{ageModel} function
 #' @param agePredictOutput Output of the agePredict function. If specified, points and error bars will be added to the age model plots for the predicted points
 #' @param scale Scaling factor for age PDFs
-#' @param predictLabels c('ages','ids','both', NA) should predicted ages and names for for points be displayed? defaults to displaying both. Set to NA for no labels
+#' @param predictLabels c('ages','ids','both', NA) should predicted ages and names for for points be displayed? Defaults to display both. Set to NA for no labels
 #' @param type c('PDF', contour') Shound probability be displayed as likelihood input PDFs or as contours of posterior probability. Defaults to PDF
 #' @param legend c('color', 'adjacent', NA) type of legend to be drawn. color draws color coded boxes for each sample, adjacent displays sample names next to each PDF. NA omits the legend.
 #' @param ... Optional arguments to be passed to plot (xlim, ylim, xlab, ylab, main)
@@ -107,6 +107,7 @@ modelPlot <- function(model,
              agePredictOutput$HDI[i, 1],
              pch = 21,
              bg = rgb(0.97, 0.46, 0.43, .5))
+
       if(!is.na(predictLabels)){
         if(predictLabels == 'ages' | predictLabels == 'both'){
           minus <- as.numeric(round(agePredictOutput$HDI[i, 3] - agePredictOutput$HDI[i, 2], 3))
