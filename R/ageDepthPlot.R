@@ -6,6 +6,7 @@
 #' @param positionThicknesses Vector of stratigraphic uncertanties for each age. Specified as half thicknesses. Must be the same length and given in the same order as \code{ages}
 #' @param distTypes Vector of distribution types to model each age as. Choices are 'G' for Gaussian, and 'U' uniform. Must be the same length and given in the same order as \code{ages}
 #' @param scale scale Scaling factor for age PDFs
+#' @param legend c('color', 'adjacent', NA) type of legend to be drawn. color draws color coded boxes for each sample, adjacent displays sample names next to each PDF. NA omits the legend.
 #' @param ... Optional arguments to be passed to plot legend
 #' @details The \code{ageDepthPlot} function makes a plot of the age probability density functions vs stratigraphic position for several samples. All ages with the same name will be combined into a single PDF.
 #' @export
@@ -16,7 +17,9 @@ ageDepthPlot <- function(ages,
                          ids,
                          positionThicknesses = rep(0,length(ages)),
                          distTypes = rep('G',length(ages)),
+                         legend = 'color',
                          scale = 1,...){
+
   ##---------------------------------------------------------------------------
   ## function for creating a summed PDF
 
@@ -144,10 +147,31 @@ ageDepthPlot <- function(ages,
 
   ##---------------------------------------------------------------------------
   # ## add a legend
-  legend('topleft',
-         legend = unique(rev(ids)),
-         fill = rev(cols),
-         bty = 'n',
-         cex = .75,
-         ncol = 4)
+  # legend('topleft',
+  #        legend = unique(rev(ids)),
+  #        fill = rev(cols),
+  #        bty = 'n',
+  #        cex = .75,
+  #        ncol = 4)
+  #
+
+
+  if(!is.na(legend)){
+    if(legend == 'color'){
+      legend('topleft',
+             legend = unique(rev(ids)),
+             fill = rev(cols),
+             bty = 'n',
+             cex = .75,
+             ncol = 4)
+    }
+    if(legend == 'adjacent'){
+      for(i in 1:length(unique(ids))){
+        x <- ageGrid[which(cumsum(prob[, i]) > .01 & cumsum(prob[, i]) < .02)[1]]
+        y <- unique(positions)[i]
+        t <- unique(ids)[i]
+        text(x = x, y = y, labels = t, pos = 4, cex = 0.6)
+      }
+    }
+  }
 }

@@ -5,7 +5,8 @@
 \title{Make plots of the age probability density functions vs position for several samples}
 \usage{
 ageDepthPlot(ages, ageSds, positions, ids, positionThicknesses = rep(0,
-  length(ages)), distTypes = rep("G", length(ages)), scale = 1, ...)
+  length(ages)), distTypes = rep("G", length(ages)), legend = "color",
+  scale = 1, ...)
 }
 \arguments{
 \item{ages}{Vector of ages}
@@ -19,6 +20,8 @@ ageDepthPlot(ages, ageSds, positions, ids, positionThicknesses = rep(0,
 \item{positionThicknesses}{Vector of stratigraphic uncertanties for each age. Specified as half thicknesses. Must be the same length and given in the same order as \code{ages}}
 
 \item{distTypes}{Vector of distribution types to model each age as. Choices are 'G' for Gaussian, and 'U' uniform. Must be the same length and given in the same order as \code{ages}}
+
+\item{legend}{c('color', 'adjacent', NA) type of legend to be drawn. color draws color coded boxes for each sample, adjacent displays sample names next to each PDF. NA omits the legend.}
 
 \item{scale}{scale Scaling factor for age PDFs}
 
