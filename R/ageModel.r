@@ -480,7 +480,8 @@ ageModel <- function(ages,
               burn = burn,
               MC = MC,
               outliers = outliers,
-              probability = probability))
+              probability = probability,
+              positionThicknesses = positionThicknesses))
 }
 
 
