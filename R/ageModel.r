@@ -204,7 +204,7 @@ ageModel <- function(ages,
   prob <-matrix(0,nrow=100000,ncol=nSamples) # create an empty matrix to store the probabilites
   ageGrid <- seq(min(ages-ageSds*10),max(ages+ageSds*10),length.out=100000) # Grid of ages to evaluate over
   for(j in 1:nSamples){
-    prob[,j] <- compoundProb(ages[ids == nNames[j]],
+    prob[, j] <- compoundProb(ages[ids == nNames[j]],
                              ageSds[ids == nNames[j]],
                              distType = distTypes[ids == nNames[j]],
                              x = ageGrid)
@@ -227,7 +227,7 @@ ageModel <- function(ages,
   ## get some starting guesses for MH sampling and make sure they conform to superposition
   thetas <- vector(length = nSamples) # create a vector to store current thetas
   for(i in 1:nSamples){
-    thetas[i] <- ageGrid[which.max(prob[, i])]
+    thetas[i] <- jitter(ageGrid[which.max(prob[, i])])
   }
   # bad = TRUE
   # count <- 0
