@@ -18,7 +18,7 @@
 #' @param truncateDown Truncation age for extrapolation below the bottom of the section. Defaults to 1e10 (a really big number)
 #' @param extrapUp Number of extrapolations to perform above the top of the section. defaults to 100
 #' @param extrapDown Number of extrapolations to perform below the bottom of the section. defaults to 100
-#' @return HDI = 95 percent highest density interval for the model run
+#' @return HDI = specified probability highest density interval for the model run
 #' @return model = Raw model predictions for each MCMC iteration
 #' @return thetas = The posterior values for each dated horizon from each MCMC run. burn is not removed.
 #' @return predictPositions = Stratigraphic positions where the model was evaluated. Same as \code{predictPositions}

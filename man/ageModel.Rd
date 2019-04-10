@@ -50,7 +50,7 @@ ageModel(ages, ageSds, positions, positionThicknesses = rep(0,
 \item{prob}{Desired confidence to return. Defaults to 95% HDI}
 }
 \value{
-HDI = 95 percent highest density interval for the model run
+HDI = specified probability highest density interval for the model run
 
 model = Raw model predictions for each MCMC iteration
 
