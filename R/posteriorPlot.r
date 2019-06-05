@@ -24,6 +24,7 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
            mean(model$mu[model$burn:model$MC]) + 4*sd(model$mu[model$burn:model$MC]))
   ##----------------------------------------------------------------------------
   ## set plot mu results
+  dev.new()
   h <- hist(model$mu,
             breaks = seq(min(model$mu)-0.01,max(model$mu) + 0.01,
                          by = mean(diff(seq(min(model$mu[model$burn:model$MC]),
@@ -97,6 +98,7 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
   xlim = c(max(0,mean(model$psi)-sd(model$psi)*4),
            mean(model$psi)+sd(model$psi)*8)
   ##----------------------------------------------------------------------------
+  dev.new()
   h <- hist(model$psi,
             breaks = length(model$psi) / 150,
             xlab = expression(psi),
@@ -165,6 +167,7 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
   ## Theta plots
   layout(c(1,2,3))
   for(i in 1:ncol(model$thetas)){
+    dev.new()
     layout(cbind(c(1,2,3)))
     xlim = c(mean(model$thetas[,i]) - 4*sd(model$thetas[,i]),
              mean(model$thetas[,i]) + 4*sd(model$thetas[,i]))
