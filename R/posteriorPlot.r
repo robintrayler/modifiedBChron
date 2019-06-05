@@ -17,14 +17,14 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
                                 '#2c7bb6'))
   cols <- colsPal(ncol(model$thetas))
   layout(cbind(c(1,2,3)))
-
+  dev.new()
   ##----------------------------------------------------------------------------
   ## set x limits for mu plot
   xlim = c(max(0, mean(model$mu[model$burn:model$MC]) - 4*sd(model$mu[model$burn:model$MC])),
            mean(model$mu[model$burn:model$MC]) + 4*sd(model$mu[model$burn:model$MC]))
   ##----------------------------------------------------------------------------
   ## set plot mu results
-  dev.new()
+
   h <- hist(model$mu,
             breaks = seq(min(model$mu)-0.01,max(model$mu) + 0.01,
                          by = mean(diff(seq(min(model$mu[model$burn:model$MC]),
@@ -95,10 +95,10 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
   ##----------------------------------------------------------------------------
   ## make psi plots
   layout(cbind(c(1,2,3)))
+  dev.new()
   xlim = c(max(0,mean(model$psi)-sd(model$psi)*4),
            mean(model$psi)+sd(model$psi)*8)
   ##----------------------------------------------------------------------------
-  dev.new()
   h <- hist(model$psi,
             breaks = length(model$psi) / 150,
             xlab = expression(psi),
