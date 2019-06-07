@@ -16,6 +16,7 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
                                 '#abd9e9',
                                 '#2c7bb6'))
   cols <- colsPal(ncol(model$thetas))
+  dev.new()
   layout(cbind(c(1,2,3)))
   ##----------------------------------------------------------------------------
   ## set x limits for mu plot
@@ -93,6 +94,7 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
 
   ##----------------------------------------------------------------------------
   ## make psi plots
+  dev.new()
   layout(cbind(c(1,2,3)))
   xlim = c(max(0,mean(model$psi)-sd(model$psi)*4),
            mean(model$psi)+sd(model$psi)*8)
@@ -165,7 +167,7 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
   ## Theta plots
   layout(c(1,2,3))
   for(i in 1:ncol(model$thetas)){
-
+    dev.new()
     layout(cbind(c(1,2,3)))
     xlim = c(mean(model$thetas[,i]) - 4*sd(model$thetas[,i]),
              mean(model$thetas[,i]) + 4*sd(model$thetas[,i]))
