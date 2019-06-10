@@ -229,21 +229,7 @@ ageModel <- function(ages,
   for(i in 1:nSamples){
     thetas[i] <- jitter(ageGrid[which.max(prob[, i])])
   }
-  # bad = TRUE
-  # count <- 0
-  # print('Finding starting ages')
-  # while(bad == TRUE){
-  #   for (j in 1:nSamples){ # for each age
-  #     thetas[j] <- sample(ageGrid, 1, prob = prob[, j],replace = TRUE) # sample the ageGrid for probabilistically for each sample
-  #   }
-  #   if(all(sign(diff(thetas)) == -1)) {bad = FALSE}
-  #
-  #   if(count%%1000 == 0) {print(paste('starting ages not found after, ',count,' attempts'))}
-  #   count <- count + 1
-  #   if(count == 10000){stop('Unable to find acceptable starting ages. Consider checking for outliers')}
-  # }
-  # rm(j)
-  # # print(paste('starting ages found after', count, 'attempts'))
+
   ##-----------------------------------------------------------------------------
   ## calculate some initial parameters
   ## based on Haslett and Parnell (2008)
@@ -273,8 +259,8 @@ ageModel <- function(ages,
                            masterPositions + nThicknesses)
     do <- order(currPositions)
     diffPositions <- diff(currPositions[do])
-    thetas[do] <- sort(thetas,decreasing = T)
-    positionStore[n,] <- currPositions
+    thetas[do] <- sort(thetas, decreasing = T)
+    positionStore[n, ] <- currPositions
     ##-----------------------------------------------------------------------------
     # Interpolate between the current thetas
     for(j in 1:(nSamples - 1)){
