@@ -13,7 +13,7 @@
 #' @param mhSD Metropolis-Hastings proposal standard deviation for the age parameters. If adapt = TRUE it will be determined by the model run. Otherwise a vector of standard deviations must be specified with length = \code{unique(ids)}
 #' @param psiSD Metropolis-Hastings proposal standard deviation for the Compound Poisson-Gamma scale parameter. If adapt = TRUE it will be determined by the model run.
 #' @param muSD Metropolis-Hastings proposal standard deviation for the Compound Poisson-Gamma mean parameter. If adapt = TRUE it will be determined by the model run.
-#' @param predictPositions Vector of stratigraphic positions to evaluate the model at. Defaults to 100 evenly spaced points from the bottom to top of the section
+#' @param predictPositions Vector of stratigraphic positions to evaluate the model at. Defaults to 500 evenly spaced points from the bottom to top of the section
 #' @param truncateUp Truncation age for extrapolating above the top of the section. Defaults to 0
 #' @param truncateDown Truncation age for extrapolation below the bottom of the section. Defaults to 1e10 (a really big number)
 #' @param extrapUp Number of extrapolations to perform above the top of the section. defaults to 100
@@ -251,7 +251,7 @@ ageModel <- function(ages,
     ## calculate some secondary model paremeters
     ## based on Haslett and Parnell (2008)
     lambda <- (mu ^ (2 - p)) / (psi * (2 - p))
-    beta <- 1 / (psi * (p - 1)*mu ^ (p - 1))
+    beta <- 1 / (psi * (p - 1) * mu ^ (p - 1))
     ##-------------------------------------------------------------------------
     ## choose some random positions from a uniform distribution for each dated horizon.
     currPositions <- runif(nSamples,
