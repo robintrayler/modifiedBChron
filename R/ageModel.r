@@ -2,7 +2,7 @@
 #'
 #' @param ages Vector of ages
 #' @param ageSds Vector of 1-sigma values for ages. Must be the same length and given in the same order as \code{ages}
-#' @param positions Vector of stratigraphic positions for ages. Must be the same length and given in the same order as \code{ages}
+#' @param positions Vector of stratigraphic positions for ages. Must be the same length and given in the same order as \code{ages}. Must be input as distance above base of section.
 #' @param positionThicknesses Vector of stratigraphic uncertanties for each age. Specified as half thicknesses. Must be the same length and given in the same order as \code{ages}
 #' @param ids Vector of sample names for each age. All samples with the same ids will be combined into a single age PDF. Must be the same length and given in the same order as \code{ages}
 #' @param distTypes c('G','U') Vector of distribution types to model each age as. Choices are 'G' for Gaussian, and 'U' uniform. Must be the same length and given in the same order as \code{ages}
