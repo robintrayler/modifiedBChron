@@ -142,7 +142,7 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
          col = 'tomato',
          lwd = 2)
   ##----------------------------------------------------------------------------
-  ylim = c(max(0,mean(model$psiSDStore) - 4*sd(model$psiSDStore)),
+  ylim = c(max(0, mean(model$psiSDStore) - 4*sd(model$psiSDStore)),
            mean(model$psiSDStore) + 8*sd(model$psiSDStore))
   ##----------------------------------------------------------------------------
   plot(model$psiSDStore,
@@ -193,7 +193,7 @@ posteriorPlot <- function(model, prob = 0.95, sigF = 3){
          cex = 1.5,
          pos = 4)
     ##----------------------------------------------------------------------------
-    ylim = c(max(0,mean(model$thetas[,i]) - 4*sd(model$thetas[,i])),
+    ylim = c(max(0, mean(model$thetas[,i]) - 4*sd(model$thetas[,i])),
              mean(model$thetas[,i]) + 8*sd(model$thetas[,i]))
     ##----------------------------------------------------------------------------
     plot(model$thetas[,i],
