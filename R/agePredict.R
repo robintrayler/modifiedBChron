@@ -40,7 +40,7 @@ agePredict <- function(model,
     f <- approxfun(x, y)
     predictStore[i, ] <- t(f(currPositions))
   }
-  HDI <- t(apply(predictStore,2,quantile, c((1 - probability) / 2, 0.5, (1 + probability) / 2)))
+  HDI <- t(apply(predictStore, 2, quantile, c((1 - probability) / 2, 0.5, (1 + probability) / 2), na.rm = T))
   HDI <- cbind(newPositions, HDI)
   HDI <- data.frame(HDI)
   HDI$ids <- ids
