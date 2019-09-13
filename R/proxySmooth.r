@@ -12,7 +12,7 @@ proxySmooth <- function(proxy,
                         proxySD = rep(0, length(proxy)),
                         agePredictOutput,
                         grid,
-                        method = c('spline','movingAverage','polynomial'),
+                        method = c('spline','movingAverage'),
                         smoothParameter = 1,
                         probability = .95){
 
@@ -22,7 +22,7 @@ proxySmooth <- function(proxy,
       ymod <- vector(length = length(grid)) # preallocate
       for (i in 1:length(grid)) { # for each value in grid
         w <- dnorm(x, grid[i], smoothParameter) # weights
-        ymod[i] <- sum(w * y) / sum(w) # calculate the moving weighted mean
+        ymod[i] <- sum(w * y, na.rm = T) / sum(w, na.rm = T) # calculate the moving weighted mean
       }
       return(ymod)
       return(as.vector(ymod))
@@ -46,16 +46,16 @@ proxySmooth <- function(proxy,
     }
   }
   ## Polynomial Smoothing Function ----------------------------------------------
-  if(method == 'polynomial'){
-    smoothFun <- function(x, y, grid, smoothParameter){
-      Df <- data.frame(x = as.vector(x), y = as.vector(y))
-      fit <- lm(y ~ poly(x, degree = smoothParameter),
-                data = Df)
-      ymod <- predict(fit,
-                      newdata = data.frame(x = grid))
-      return(as.vector(ymod))
-    }
-  }
+  # if(method == 'polynomial'){
+  #   smoothFun <- function(x, y, grid, smoothParameter){
+  #     Df <- data.frame(x = as.vector(x), y = as.vector(y))
+  #     fit <- lm(y ~ poly(x, degree = smoothParameter),
+  #               data = Df)
+  #     ymod <- predict(fit,
+  #                     newdata = data.frame(x = grid))
+  #     return(as.vector(ymod))
+  #   }
+  # }
 
   ##---------------------------------------------------------------------------
   ## fit a smoothing model
