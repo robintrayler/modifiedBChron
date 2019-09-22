@@ -227,7 +227,7 @@ ageModel <- function(ages,
   ## get some starting guesses for MH sampling and make sure they conform to superposition
   thetas <- vector(length = nSamples) # create a vector to store current thetas
   for(i in 1:nSamples){
-    thetas[i] <- jitter(ageGrid[which.max(prob[, i])], factor = 0.1)
+    thetas[i] <- ageGrid[which.max(prob[, i])] + rnorm(1, 0, 0.00001)
   }
 
   ##-----------------------------------------------------------------------------
