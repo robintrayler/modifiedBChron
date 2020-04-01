@@ -4,8 +4,7 @@ Title: Run A Modified Version of the Compound Poison-Gamma Chronology Model of H
 Version: 0.7.0
 Author: Robin Trayler
 Maintainer: Robin B. Trayler <robintrayler@gmail.com>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Trayler, R. B., Schmitz, M. D., Cuitiño, J. I., Kohn, M. J., Bargo, M. S., Kay, R. F., Strömberg, C. A. E., and Vizcaíno, S. F., 2019, An Improved Approach To Age-Depth Modeling In Deep Time: Implications For The Santa Cruz Formation, Argentina: Geological Society of America Bulletin.
 Depends: R (>= 3.3.2)
 License: What license is it under?
 Encoding: UTF-8
