@@ -200,14 +200,14 @@ ageModel <- function(ages,
   }
 
   ##-----------------------------------------------------------------------------
-  ## generate the summed probability distirbutions at each unique depth position
+  ## generate the summed probability distributions at each unique depth position
   prob <-matrix(0,nrow=100000,ncol=nSamples) # create an empty matrix to store the probabilites
   ageGrid <- seq(min(ages-ageSds*10),max(ages+ageSds*10),length.out=100000) # Grid of ages to evaluate over
   for(j in 1:nSamples){
     prob[, j] <- compoundProb(ages[ids == nNames[j]],
-                             ageSds[ids == nNames[j]],
-                             distType = distTypes[ids == nNames[j]],
-                             x = ageGrid)
+                              ageSds[ids == nNames[j]],
+                              distType = distTypes[ids == nNames[j]],
+                              x = ageGrid)
   }
   rm(j)
 
@@ -237,7 +237,7 @@ ageModel <- function(ages,
   mu <- abs(rnorm(1,mean=mean(diff(thetas))/mean(diff(currPositions)),sd=muSD))
   psi <- abs(rnorm(1,1,sd=psiSD))
   p = 1.2
-  alpha <- (2-p)/(p-1) # haslett and parnell
+  alpha <- (2-p) / (p-1) # Haslett and Parnell
 
   pb <- utils::txtProgressBar(min = 1,
                               max = MC,
@@ -248,7 +248,7 @@ ageModel <- function(ages,
   for(n in 1:MC){
     utils::setTxtProgressBar(pb, n) # set the progress bar
     ##-------------------------------------------------------------------------
-    ## calculate some secondary model paremeters
+    ## calculate some secondary model parameters
     ## based on Haslett and Parnell (2008)
     lambda <- (mu ^ (2 - p)) / (psi * (2 - p))
     beta <- 1 / (psi * (p - 1) * mu ^ (p - 1))
@@ -261,6 +261,7 @@ ageModel <- function(ages,
     diffPositions <- diff(currPositions[do])
     thetas[do] <- sort(thetas, decreasing = T)
     positionStore[n, ] <- currPositions
+
     ##-----------------------------------------------------------------------------
     # Interpolate between the current thetas
     for(j in 1:(nSamples - 1)){
@@ -309,16 +310,18 @@ ageModel <- function(ages,
     ## Update thetas
     for(i in 1:nSamples){
       thetaCurrent <- thetas[do[i]]
-      ## choose a new theta from a truncated normal where truncations are the surrounding thetas
+      ## choose a new theta from a truncated normal where truncation are the surrounding thetas
       thetaProposed <- truncatedWalk(old = thetaCurrent,
                                      sd = mhSD[do[i]],
-                                     low = ifelse(i == nSamples, truncateUp, thetas[do[i+1]]-1e-10), # if we're at the top truncate at a really small number
-                                     high = ifelse(i == 1,1e10, thetas[do[i-1]] + 1e-10)) # if we're at the bottom, truncate at a really big number
+                                     low = ifelse(i == nSamples,
+                                                  truncateUp,
+                                                  thetas[do[i+1]]-1e-10), # if we're at the top truncate at a really small number
+                                     high = ifelse(i == 1, 1e10, thetas[do[i-1]] + 1e-10)) # if we're at the bottom, truncate at a really big number
 
       pProposed <- log(prob[, do[i]][which.min(abs(ageGrid - thetaProposed$new))])
-      pProposed <-  max(pProposed, -1000000, na.rm = T) # just incase things get really small
+      pProposed <-  max(pProposed, -1000000, na.rm = T) # just in case things get really small
       pCurrent <- log(prob[, do[i]][which.min(abs(ageGrid - thetaCurrent))])
-      pCurrent <-  max(pCurrent, -1000000, na.rm = T) # just incase things get really small
+      pCurrent <-  max(pCurrent, -1000000, na.rm = T) # just in case things get really small
 
       priorProposed <-  ifelse(i == 1,
                                0,
@@ -344,13 +347,19 @@ ageModel <- function(ages,
                               p = p,
                               mu = mu*(diffPositions[i]),
                               phi = psi*(diffPositions[i]) ^ (p - 1))))
+
+      # clean up the probabilities if they get really really small
       priorCurrent <- max(priorCurrent, -1000000, na.rm = T)
       priorProposed <- max(priorProposed, -1000000, na.rm = T)
+
+      # calculate the joint probability
       logRtheta <- priorProposed - priorCurrent + pProposed - pCurrent + log(thetaProposed$rat)
+
+      # keep the probability to go to -Inf
       logRtheta <- max(logRtheta, -1000000, na.rm = T)
-      if(runif(1, 0, 1) < min(1, exp(logRtheta))){thetas[do[i]] <- thetaProposed$new}
+      if(runif(1, 0, 1) < min(1, exp(logRtheta))) {thetas[do[i]] <- thetaProposed$new}
     }
-    thetaStore[n,] <- thetas
+    thetaStore[n, ] <- thetas
     #-----------------------------------------------------------------------------
     ## Update mu
     muCurrent <- mu
@@ -373,7 +382,6 @@ ageModel <- function(ages,
     ##-----------------------------------------------------------------------------
     ## Update psi
     psiCurrent <- psi
-
     psiProposed <- truncatedWalk(old = psi,
                                  sd = psiSD,
                                  low = 1e-10,
@@ -397,12 +405,13 @@ ageModel <- function(ages,
     if(adapt == T){
       h = 200
       if(n%%h == 0){
-        cd <- 2.4/sqrt(1) # Gelman et al. (1996)
+        cd <- 2.4 / sqrt(1) # Gelman et al. (1996)
         psiK <- psiStore[(n - h + 1): n] - mean(psiStore[(n - h + 1): n])
         psiRt <- var(psiK) # calculate the variance
         psiSD <- sqrt((cd ^ 2) * psiRt) # calculate the standard deviation
         psiSD <- ifelse(is.na(psiSD),cd * sd(psiStore, na.rm = T), psiSD) # get rid of NAs
         psiSD <- ifelse(psiSD == 0,cd * sd(psiStore, na.rm = T), psiSD) # get rid of zeroes
+
         muK <-  muStore[(n - h + 1): n] - mean(muStore[(n - h + 1): n]) # calculate K
         muRt <- var(muK) # calculate the variance
         muSD <- sqrt(cd ^ 2 * muRt)
@@ -418,14 +427,16 @@ ageModel <- function(ages,
         }
       }
       ## Store the results
-      psiSDStore[n] <- psiSD
-      muSDStore[n] <- muSD
-      mhSDStore[n,] <- mhSD
+      psiSDStore[n]  <- psiSD
+      muSDStore[n]   <- muSD
+      mhSDStore[n, ] <- mhSD
     }
   }
+
   ##-----------------------------------------------------------------------------
-  ## check to see if posterior and likelihood distributions oberlap at the specified confidence
+  ## check to see if posterior and likelihood distributions overlap at the specified confidence
   ## if they don't flag them for the user to review
+
   isOutlier <- function(probability){
     outlier <- vector(length = ncol(thetaStore))
     for(i in 1:ncol(thetaStore)){
@@ -447,10 +458,11 @@ ageModel <- function(ages,
       warning(paste('sample', ids[outliers][i],'posterior distribution', probability*100,'% HDI', 'does not overlap the input likelihood. Consider screening for outliers.'))
     }
   }
+
   ##-----------------------------------------------------------------------------
-  return(list(HDI = apply(modelStore[,burn:MC], 1, quantile,c((1 - probability) / 2, 0.5 , (1 + probability) / 2)),
-              model = modelStore[,burn:MC],
-              thetas = thetaStore,
+  return(list(HDI = apply(modelStore[, burn:MC], 1, quantile,c((1 - probability) / 2, 0.5 , (1 + probability) / 2)),
+              model = modelStore[, burn:MC],
+              thetas = thetaStore[burn:MC, ],
               positionStore = positionStore,
               psi = psiStore,
               mu = muStore,
