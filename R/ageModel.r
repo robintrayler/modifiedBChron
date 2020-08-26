@@ -461,7 +461,7 @@ ageModel <- function(ages,
 
   ##-----------------------------------------------------------------------------
   return(list(HDI = apply(modelStore[, burn:MC], 1, quantile,c((1 - probability) / 2, 0.5 , (1 + probability) / 2)),
-              model = modelStore[, burn:MC],
+              model = modelStore,
               thetas = thetaStore,
               positionStore = positionStore,
               psi = psiStore,
