@@ -36,7 +36,7 @@ sumPDF <- function(ages,
 
     }
     densities[[i]] <- base::apply(interval, 1, sum)
-    out[[i]] <- list(ageGrid = ageGrid[[i]],
+    out[[i]] <- data.frame(ageGrid = ageGrid[[i]],
                      densities = densities[[i]])
 
   }
