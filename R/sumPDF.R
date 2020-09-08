@@ -43,9 +43,13 @@ sumPDF <- function(ages,
       }
     }
 
-    densities[[i]] <- base::apply(interval, 1, sum)
+    densities[[i]] <- base::apply(interval, 1, sum) * mean(diff(ageGrid[[i]])) / current_n
+
+
     out[[i]] <- data.frame(ageGrid = ageGrid[[i]],
                            densities = densities[[i]])
+
+
   }
 
   names(out) <- samples
