@@ -62,7 +62,7 @@ ageDepthPlot <- function(ages,
   ## create the likelihood PDFs
   prob <-matrix(0,
                 nrow=100000,
-                ncol=n) # create an empty matrix to store the probabilites
+                ncol=n) # create an empty matrix to store the probabilities
   ageGrid <- seq(min(ages-ageSds*10),
                  max(ages+ageSds*10),
                  length.out=100000) # Grid of ages to evaluate over
@@ -75,7 +75,7 @@ ageDepthPlot <- function(ages,
 
   ##---------------------------------------------------------------------------
   ## set axis limits, determine scaling and colors
-  scl <- diff(range(currPositions))/n*scale # scaling factor for ploting age PDFs
+  scl <- diff(range(currPositions))/n*scale # scaling factor for plotting age PDFs
   colsPal <- colorRampPalette(c('#d7191c',
                                 '#fdae61',
                                 '#ffffbf',
@@ -147,15 +147,6 @@ ageDepthPlot <- function(ages,
 
   ##---------------------------------------------------------------------------
   # ## add a legend
-  # legend('topleft',
-  #        legend = unique(rev(ids)),
-  #        fill = rev(cols),
-  #        bty = 'n',
-  #        cex = .75,
-  #        ncol = 4)
-  #
-
-
   if(!is.na(legend)){
     if(legend == 'color'){
       legend('topleft',
@@ -165,12 +156,17 @@ ageDepthPlot <- function(ages,
              cex = .75,
              ncol = 4)
     }
+
     if(legend == 'adjacent'){
       for(i in 1:length(unique(ids))){
         x <- ageGrid[which(cumsum(prob[, i]) > .01 & cumsum(prob[, i]) < .02)[1]]
         y <- unique(positions)[i]
         t <- unique(ids)[i]
-        text(x = x, y = y, labels = t, pos = 4, cex = 0.6)
+        text(x = x,
+             y = y,
+             labels = t,
+             pos = 4,
+             cex = 0.6)
       }
     }
   }

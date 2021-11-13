@@ -3,10 +3,10 @@
 #' @param ages Vector of ages
 #' @param ageSds Vector of 1-sigma values for ages. Must be the same length and given in the same order as \code{ages}
 #' @param positions Vector of stratigraphic positions for ages. Must be the same length and given in the same order as \code{ages}. Must be input as distance above base of section.
-#' @param positionThicknesses Vector of stratigraphic uncertanties for each age. Specified as half thicknesses. Must be the same length and given in the same order as \code{ages}
+#' @param positionThicknesses Vector of stratigraphic uncertainties for each age. Specified as half thicknesses. Must be the same length and given in the same order as \code{ages}
 #' @param ids Vector of sample names for each age. All samples with the same ids will be combined into a single age PDF. Must be the same length and given in the same order as \code{ages}
 #' @param distTypes c('G','U') Vector of distribution types to model each age as. Choices are 'G' for Gaussian, and 'U' uniform. Must be the same length and given in the same order as \code{ages}
-#' @param MC Number of MCMC interation to run for. Defaults to 10000
+#' @param MC Number of MCMC iteration to run for. Defaults to 10000
 #' @param burn Number of initial iterations to discard. Defaults to 2000
 #' @param prob Desired confidence to return. Defaults to 95% HDI
 #' @param adapt Should the proposal standard deviation for model parameters be determined using the adaptive proposal algorithm of Haario et al., 1998. Defaults to TRUE
@@ -153,7 +153,7 @@ ageModel <- function(ages,
 
   ##-----------------------------------------------------------------------------
   ## function for creating a summed PDF of ages
-  compoundProb <- function(ages,sigs,distType,x){
+  compoundProb <- function(ages, sigs, distType, x){
     interval <- matrix(0,nrow = length(x), ncol=length(ages))
     for (i in 1:length(ages)) {
       if(distType[i] == 'G') {
@@ -181,7 +181,7 @@ ageModel <- function(ages,
   nSamples <- length(unique(ids)) # get the number of unique date layers
   masterPositions <- vector()
   nNames <- unique(ids) # get a list of each unique sample name
-  for(i in 1:nSamples){
+  for(i in 1:nSamples) {
     masterPositions[i] <- positions[ids == nNames[i]][1]
   }
 
@@ -201,7 +201,7 @@ ageModel <- function(ages,
 
   ##-----------------------------------------------------------------------------
   ## generate the summed probability distributions at each unique depth position
-  prob <-matrix(0,nrow=100000,ncol=nSamples) # create an empty matrix to store the probabilites
+  prob <-matrix(0,nrow=100000,ncol=nSamples) # create an empty matrix to store the probabilities
   ageGrid <- seq(min(ages-ageSds*10),max(ages+ageSds*10),length.out=100000) # Grid of ages to evaluate over
   for(j in 1:nSamples){
     prob[, j] <- compoundProb(ages[ids == nNames[j]],
@@ -237,7 +237,7 @@ ageModel <- function(ages,
   mu <- abs(rnorm(1,mean=mean(diff(thetas))/mean(diff(currPositions)),sd=muSD))
   psi <- abs(rnorm(1,1,sd=psiSD))
   p = 1.2
-  alpha <- (2-p) / (p-1) # Haslett and Parnell
+  alpha <- (2-p) / (p-1) # Haslett and Parnell (2008)
 
   pb <- utils::txtProgressBar(min = 1,
                               max = MC,
@@ -398,7 +398,6 @@ ageModel <- function(ages,
 
     psi <- ifelse(runif(1, 0, 1) < min(1, exp(priorPsi)), psiProposed$new, psiCurrent)
     psiStore[n] <- psi
-
 
     ##-----------------------------------------------------------------------------
     ## Update SDs
