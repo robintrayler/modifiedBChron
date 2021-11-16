@@ -86,7 +86,7 @@ Once `modifiedBchron` is installed it can be loaded as an R package by adding `l
 
 The core function of `modifiedBchron` is `ageModel()`. `ageModel()` takes the data shows in the table above and outputs a bayesian age model. 
 
-```{r}
+```r
 # load the package
 library(modifiedBChron) 
 
@@ -108,7 +108,7 @@ age_model <- ageModel(ages = df$age,
 
 You can view the plot the output of the age model using the `modelPlot()` function. 
 
-```{r}
+```r
 modelPlot(model = age_model, 
           scale = 8) # changes the height of the probability distributions
 ```
@@ -117,7 +117,7 @@ modelPlot(model = age_model,
 
 You can predict the age of new stratigraphic positions using the `agePredict()` function. The `newPositions` and `newPositionThicknesses` follow the same general rules as `positions` and `positionThicknesses` in `ageModel()`.
 
-```{r}
+```r
 age_predictions <- agePredict(model = age_model, 
            newPositions = c(57, 120, 150),
            newPositionThicknesses = c(1, 3, 0.5))
@@ -125,7 +125,7 @@ age_predictions <- agePredict(model = age_model,
 
 Finally you can add `age_predictions` to a plot using `modelPlot()`. 
 
-```{r}
+```r
 modelPlot(model, 
           agePredictOutput = age_predictions,
           scale = 8, 
