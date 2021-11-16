@@ -4,7 +4,7 @@ This package provides a version of the [Bchron](https://github.com/andrewcparnel
 
 ## Introduction
 
-Bchron is a bayesian age-depth model implemented in R. Since it was originally designed for radiocarbon analyses It lacks some features that are desirable to those working with U-Pb or <sup>40</sup>Ar/<sup>39</sup>Ar geochronology data. In this package we have made several modifications including 
+`Bchron` is a bayesian age-depth model implemented in R. Since it was originally designed for radiocarbon analyses It lacks some features that are desirable to those working with U-Pb or <sup>40</sup>Ar/<sup>39</sup>Ar geochronology data. In this package we have made several modifications including 
 
 * We allow individual dates to be grouped to form complex probability density functions, reproducing the practice in both U-Pb and <sup>40</sup>Ar/<sup>39</sup>Ar geochronology of convolving many single crystal or spot analyses into a single age distribution.
 * We have added an adaptive Markov Chain Monte Carlo Algorithm[^3] to ensure efficient exploration off parameter space, independent of the scale of the data (e.g., 1 Ma vs 1,000 ka, vs 1,000,000 a)
