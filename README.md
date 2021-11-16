@@ -113,7 +113,7 @@ modelPlot(model = age_model,
           scale = 8) # changes the height of the probability distributions
 ```
 
-![](./figures/example_model.pdf)
+![](./figures/example_model.jpg)
 
 
 * `ageModel()`
