@@ -38,7 +38,7 @@ Once `modifiedBchron` is installed it can be loaded as an R package by adding `l
 * `ages`: these are the radiometric ages for each sample. In this example, each age is a single zircon grain TIMS age.
 * `ageSds`: The analytical uncertainty for each `ages` expressed as 1 standard deviation for gaussian distributions, or as a half-range for uniform distributions.
 * `positions`: The stratigraphic position of each sample in ***units above base*** of the section. The positions for samples within an `ids` group ***must all match exactly***. If you are working with depths then you can simply make your measurements negative (e.g., 200 meters below core-top becomes -200 "above" base). 
-* `positionThicknesses`: The stratigraphic uncertainty of each `positions` expressed as a half thickness. For example a volcanic as that is 2 meters thick at  100 meters above base would have a `positions` of *100* and a `positionThicknesss` of *1*. The thicknesses for each ids` group ***must match exactly***.
+* `positionThicknesses`: The stratigraphic uncertainty of each `positions` expressed as a half thickness. For example a volcanic as that is 2 meters thick at  100 meters above base would have a `positions` of *100* and a `positionThicknesss` of *1*. The thicknesses for each `ids` group ***must match exactly***.
 * `distType`: The statistical distribution to use for each sample. Defaults to Gaussian (`G`). Uniform distributions (`U`) are also supported.
 
 |ids         |    age| ageSds| position| thickness|distType |
