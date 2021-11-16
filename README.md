@@ -19,7 +19,7 @@ This package provides a version of the [`Bchron`](https://github.com/andrewcparn
 xcode-select --install
 ```
 
-```
+```r
 # copy this code into R
 # install.packages('devtools')
 devtools::install_github('robintrayler/modifiedBchron')
