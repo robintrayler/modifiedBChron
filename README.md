@@ -34,6 +34,13 @@ Once `modifiedBchron` is installed it can be loaded as an R package by adding `l
 ### Data Inputs 
 `modifiedBchron` requires several inputs, shown in the table below.
 
+* `ids`: These are the sample names. Samples with the same `ids` will be combined into a single summed probability distribution. 
+* `ages`: these are the radiometric ages for each sample. In this example, each age is a single zircon grain TIMS age.
+* `ageSds`: The analytical uncertainty for each `ages` expressed as 1 standard deviation for gaussian distributions, or as a half-range for uniform distributions.
+* `positions`: The stratigraphic position of each sample in ***units above base*** of the section. The positions for samples within an `ids` group ***must all match exactly***. If you are working with depths then you can simply make your measurements negative (e.g., 200 meters below core-top becomes -200 "above" base). 
+* `positionThicknesses`: The stratigraphic uncertainty of each `positions` expressed as a half thickness. For example a volcanic as that is 2 meters thick at  100 meters above base would have a `positions` of *100* and a `positionThicknesss` of *1*. The thicknesses for each ids` group ***must match exactly***.
+* `distType`: The statistical distribution to use for each sample. Defaults to Gaussian (`G`). Uniform distributions (`U`) are also supported.
+
 |ids         |    age| ageSds| position| thickness|distType |
 |:-----------|------:|------:|--------:|---------:|:--------|
 |CV13        | 17.634|  0.016|    48.25|     3.125|G        |
@@ -75,13 +82,6 @@ Once `modifiedBchron` is installed it can be loaded as an R package by adding `l
 |CO3         | 16.678|  0.079|   193.50|     1.500|G        |
 |CO3         | 16.685|  0.082|   193.50|     1.500|G        |
 
-* `ids`: These are the sample names. Samples with the same `ids` will be combined into a single summed probability distribution. 
-* `ages`: these are the radiometric ages for each sample. In this example, each age is a single zircon grain TIMS age.
-* `ageSds`: The analytical uncertainty for each `ages` expressed as 1 standard deviation for gaussian distributions, or as a half-range for uniform distributions.
-* `positions`: The stratigraphic position of each sample in ***units above base*** of the section. The positions for samples within an `ids` group ***must all match exactly***. If you are working with depths then you can simply make your measurements negative (e.g., 200 meters below core-top becomes -200 "above" base). 
-* `positionThicknesses`: The stratigraphic uncertainty of each `positions` expressed as a half thickness. For example a volcanic as that is 2 meters thick at  100 meters above base would have a `positions` of *100* and a `positionThicknesss` of *1*. The thicknesses for each ids` group ***must match exactly***.
-* `distType`: The statistical distribution to use for each sample. Defaults to Gaussian (`G`). Uniform distributions (`U`) are also supported.
-
 ### Example 
 
 The core function of `modifiedBchron` is `ageModel()`. `ageModel()` takes the data shows in the table above and outputs a bayesian age model. 
@@ -113,12 +113,25 @@ modelPlot(model = age_model,
           scale = 8) # changes the height of the probability distributions
 ```
 
-![](./figures/example_model.jpg)
+![example age model](./figures/example_model.jpg)
 
+You can predict the age of new stratigraphic positions using the `agePredict()` function. The `newPositions` and `newPositionThicknesses` follow the same general rules as `positions` and `positionThicknesses` in `ageModel()`.
 
-* `ageModel()`
-* `modelPlot()`
-* `agePredict()`
+```{r}
+age_predictions <- agePredict(model = age_model, 
+           newPositions = c(57, 120, 150),
+           newPositionThicknesses = c(1, 3, 0.5))
+```
+
+Finally you can add `age_predictions` to a plot using `modelPlot()`. 
+
+```{r}
+modelPlot(model, 
+          agePredictOutput = age_predictions,
+          scale = 8, 
+          ylim = c(45, 250))
+```
+![predicted positions plot](./figures/predict_positions.jpg)
 
 [^1]: Trayler, R.B., Schmitz, M.D., Cuitiño, J.I., Kohn, M.J., Bargo, M.S., Kay, R.F., Strömberg, C.A.E., and Vizcaíno, S.F., 2020, An Improved Approach To Age-Depth Modeling In Deep Time: Implications For The Santa Cruz Formation, Argentina: Geological Society of America Bulletin, v. 132, p. 233–244.
 
