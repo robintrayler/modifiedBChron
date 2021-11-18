@@ -240,21 +240,23 @@ bchron_model <- function(ages,
   ## calculate some initial parameters
   ## based on Haslett and Parnell (2008)
   currPositions <- masterPositions
+
+  mhSD  <- runif(length(unique(ids)))
+  psiSD <- runif(1)
+  muSD  <- runif(1)
+
   mu <- abs(rnorm(1,
                   mean = mean(diff(thetas)) / mean(diff(currPositions)),
                   sd = muSD))
   psi <- abs(rnorm(1, 1, sd = psiSD))
   p = 1.2
   alpha <- (2 - p) / (p - 1) # Haslett and Parnell (2008)
-  mhSD  <- runif(length(unique(ids)))
-  psiSD <- runif(1)
-  muSD  <- runif(1)
 
   pb <- progress::progress_bar$new(total = iterations,
                                    format = '[:bar] :percent eta: :eta')
 
   for(n in 1:iterations){
-    utils::setTxtProgressBar(pb, n) # set the progress bar
+    pb$tick()
     ##-------------------------------------------------------------------------
     ## calculate some secondary model parameters
     ## based on Haslett and Parnell (2008)
