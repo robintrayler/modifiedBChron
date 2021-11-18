@@ -29,8 +29,6 @@
 #' @return masterPositions = Stratigraphic positions for each set of combined ages. Useful for plotting
 #' @return ids = Vector of unique sample names. Useful for plotting
 #'
-#' @import 'progress'
-#'
 #' @useDynLib modifiedBChron
 #' @export
 
