@@ -4,8 +4,15 @@
 \alias{modelPlot}
 \title{This function generates two age model plots given the output of an ageModel run.}
 \usage{
-modelPlot(model, agePredictOutput = NA, predictLabels = "both", scale = 1,
-  type = "PDF", legend = "color", ...)
+modelPlot(
+  model,
+  agePredictOutput = NA,
+  predictLabels = "both",
+  scale = 1,
+  type = "PDF",
+  legend = "color",
+  ...
+)
 }
 \arguments{
 \item{model}{Output of the \code{ageModel} function}

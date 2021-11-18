@@ -4,9 +4,15 @@
 \alias{proxySmooth}
 \title{This function uses a Monte Carlo aproach to repetedly fit a smoothing model to some proxy data incorperating the model uncertanties in age}
 \usage{
-proxySmooth(proxy, proxySD = rep(0, length(proxy)), agePredictOutput, grid,
-  method = c("spline", "movingAverage", "polynomial"), smoothParameter = 1,
-  probability = 0.95)
+proxySmooth(
+  proxy,
+  proxySD = rep(0, length(proxy)),
+  agePredictOutput,
+  grid,
+  method = c("spline", "movingAverage"),
+  smoothParameter = 1,
+  probability = 0.95
+)
 }
 \arguments{
 \item{proxy}{Vector proxy compostions. must be numeric}

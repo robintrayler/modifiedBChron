@@ -4,7 +4,7 @@
 \alias{ageExtract}
 \title{Extract the highest density intervals for the dated horizons using an ageModel output}
 \usage{
-ageExtract(model)
+ageExtract(model, probability = 0.95)
 }
 \arguments{
 \item{model}{model Output of the \code{ageModel} function}
