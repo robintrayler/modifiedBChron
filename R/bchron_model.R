@@ -450,10 +450,15 @@ bchron_model <- function(ages,
     for(i in 1:ncol(thetaStore)){
       f <- approxfun(x = cumsum(prob[, i]),
                      y = ageGrid)
-      likelihood <- f(c((1 - probability) / 2, 0.5, (1 + probability) / 2))
+
+      likelihood <- f(c((1 - probability) / 2,
+                        0.5,
+                        (1 + probability) / 2))
 
       posterior <- as.numeric(quantile(thetaStore[burn:iterations, i],
-                                       prob = c((1 - probability) / 2, 0.5, (1 + probability) / 2)))
+                                       prob = c((1 - probability) / 2,
+                                                0.5,
+                                                (1 + probability) / 2)))
 
       outlier[i] <- !(any(posterior > likelihood[1]) & any(posterior < likelihood[3]))
     }
@@ -476,14 +481,36 @@ bchron_model <- function(ages,
   }
 
   ##-----------------------------------------------------------------------------
-  return(list(HDI = apply(modelStore[, burn:iterations], 1,
-                          quantile,c((1 - probability) / 2, 0.5 , (1 + probability) / 2)),
+  HDI <- apply(modelStore[, burn:iterations],
+               1,
+               quantile,c((1 - probability) / 2,
+                          0.5,
+                          (1 + probability) / 2)) |>
+    t() |> cbind(predictPositions) |>
+    as.data.frame()
+
+  thetaStore <- thetaStore |>
+    as.data.frame() |>
+    setNames(nNames)
+
+  inputs <- data.frame(ids,
+                       ages,
+                       ageSds,
+                       positions,
+                       positionThicknesses,
+                       distTypes)
+
+  prob <- prob |>
+    as.data.frame() |>
+    setNames(nNames)
+
+  return(list(HDI,
+              inputs,
               model = modelStore,
               thetas = thetaStore,
               positionStore = positionStore,
               psi = psiStore,
               mu = muStore,
-              predictPositions = predictPositions,
               ageGrid = ageGrid,
               likelihoods = prob,
               nAges = nAges,
