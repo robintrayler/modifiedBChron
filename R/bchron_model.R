@@ -504,26 +504,30 @@ bchron_model <- function(ages,
     as.data.frame() |>
     setNames(nNames)
 
-  return(list(HDI,
-              inputs,
-              model = modelStore,
-              thetas = thetaStore,
-              positionStore = positionStore,
-              psi = psiStore,
-              mu = muStore,
-              ageGrid = ageGrid,
-              likelihoods = prob,
-              nAges = nAges,
-              masterPositions = masterPositions,
-              ids = nNames,
-              psiSDStore = psiSDStore,
-              muSDStore = muSDStore,
-              mhSDStore = mhSDStore,
-              burn = burn,
-              iterations = iterations,
-              outliers = outliers,
-              probability = probability,
-              positionThicknesses = positionThicknesses))
+
+  output <- list(HDI = HDI,
+                 inputs = inputs,
+                 model = modelStore,
+                 thetas = thetaStore,
+                 positionStore = positionStore,
+                 psi = psiStore,
+                 mu = muStore,
+                 ageGrid = ageGrid,
+                 likelihoods = prob,
+                 nAges = nAges,
+                 masterPositions = masterPositions,
+                 ids = nNames,
+                 psiSDStore = psiSDStore,
+                 muSDStore = muSDStore,
+                 mhSDStore = mhSDStore,
+                 burn = burn,
+                 iterations = iterations,
+                 outliers = outliers,
+                 probability = probability,
+                 positionThicknesses = positionThicknesses)
+
+  class(output) <- 'bchron_model_run'
+  return(output)
 }
 
 
