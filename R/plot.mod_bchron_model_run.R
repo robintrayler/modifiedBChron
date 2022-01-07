@@ -2,9 +2,14 @@
 #'
 #' @param model Output of the \code{ageModel} function
 #' @param type c('pdf', rectangle', 'posterior')
-#' @export
-#
+#'
+#' @import "tidyverse"
+#' @import "ggplot2"
+#' @import "dplyr"
+#' @import "tibble"
+#' @import "ggridges"
 
+#' @export
 
 plot.mod_bchron_model_run <- function(model, type = c('pdf',
                                                           'rectangle',
