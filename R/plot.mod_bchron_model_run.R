@@ -155,7 +155,7 @@ plot_model_trace <- function(model) {
     ggtitle('Trace Plots')
 }
 
-plot_posterior_density <- function(model) {
+plot_model_posterior <- function(model) {
   model$thetas |>
     ggplot(mapping = aes(x = age,
                          fill = id)) +
