@@ -7,6 +7,7 @@
 #' @import "dplyr"
 #' @import "tidyr"
 #' @import "purrr"
+#' @import "tibble"
 #' @import "ggridges"
 
 #' @export
