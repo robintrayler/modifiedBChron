@@ -1,7 +1,7 @@
 #' This function generates  age model plots given the output of an ageModel run.
 #'
 #' @param model Output of the \code{ageModel} function
-#' @param type c('pdf', rectangle', 'posterior')
+#' @param type c('pdf', rectangle', 'trace', 'posterior')
 #'
 #' @import "ggplot2"
 #' @import "dplyr"
@@ -12,10 +12,8 @@
 
 #' @export
 
-plot.mod_bchron_model_run <- function(model, type = c('pdf',
-                                                          'rectangle',
-                                                          'posterior')) {
-
+plot.mod_bchron_model_run <- function(model, type = 'pdf') {
+  ggplot2::theme_set(ggplot2::theme_bw())
   # first format the model ----------------------------------------------------
   model$HDI <- model$HDI |>
     t() |>
@@ -38,11 +36,20 @@ plot.mod_bchron_model_run <- function(model, type = c('pdf',
     drop_na() |>
     mutate(id = factor(id, levels = model$ids[order(model$masterPositions)]))
 
+  model$thetas <- model$thetas |>
+    as.data.frame() |>
+    set_names(nm = model$ids) |>
+    add_column(iteration = 1:model$MC) |>
+    pivot_longer(cols = model$ids,
+                 names_to = 'id',
+                 values_to = 'age')
+
   # plot based on type --------------------------------------------------------
   p <- switch(type,
               pdf = plot_pdf_model(model),
               rectangle = plot_rectangle_model(model),
-              posterior = 'posterior')
+              trace = plot_model_trace(),
+              posterior = plot_model_posterior)
   return(p)
 }
 
@@ -74,7 +81,6 @@ plot_pdf_model <- function(model) {
     theme(legend.position = 'top')
   return(p)
 }
-
 
 ###############################################################################
 # time scale style rectangle plots
@@ -134,3 +140,27 @@ plot_rectangle_model <- function(model) {
   return(p)
 }
 
+###############################################################################
+# plots of model posterior
+plot_model_trace <- function(model) {
+  model$thetas |>
+    ggplot(mapping = aes(x = iteration,
+                         y = age,
+                         color = id)) +
+    geom_line() +
+    geom_vline(xintercept = model$burn,
+               linetype = 'dashed') +
+    facet_wrap(~id, scales = 'free_y') +
+    theme(legend.position = 'none') +
+    ggtitle('Trace Plots')
+}
+
+plot_posterior_density <- function(model) {
+  model$thetas |>
+    ggplot(mapping = aes(x = age,
+                         fill = id)) +
+    geom_density(color = NA) +
+    facet_wrap(~id, scales = 'free') +
+    theme(legend.position = 'none') +
+    ggtitle('Posterior Density')
+}

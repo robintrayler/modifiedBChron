@@ -4,12 +4,12 @@
 \alias{plot.mod_bchron_model_run}
 \title{This function generates  age model plots given the output of an ageModel run.}
 \usage{
-\method{plot}{mod_bchron_model_run}(model, type = c("pdf", "rectangle", "posterior"))
+\method{plot}{mod_bchron_model_run}(model, type = "pdf")
 }
 \arguments{
 \item{model}{Output of the \code{ageModel} function}
 
-\item{type}{c('pdf', rectangle', 'posterior')}
+\item{type}{c('pdf', rectangle', 'trace', 'posterior')}
 }
 \description{
 This function generates  age model plots given the output of an ageModel run.
