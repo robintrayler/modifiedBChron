@@ -3,10 +3,10 @@
 #' @param model Output of the \code{ageModel} function
 #' @param type c('pdf', rectangle', 'posterior')
 #'
-#' @import "tidyverse"
 #' @import "ggplot2"
 #' @import "dplyr"
-#' @import "tibble"
+#' @import "tidyr"
+#' @import "purrr"
 #' @import "ggridges"
 
 #' @export
