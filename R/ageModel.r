@@ -459,26 +459,28 @@ ageModel <- function(ages,
   }
 
   ##-----------------------------------------------------------------------------
-  return(list(HDI = apply(modelStore[, burn:MC], 1, quantile,c((1 - probability) / 2, 0.5 , (1 + probability) / 2)),
-              model = modelStore,
-              thetas = thetaStore,
-              positionStore = positionStore,
-              psi = psiStore,
-              mu = muStore,
-              predictPositions = predictPositions,
-              ageGrid = ageGrid,
-              likelihoods = prob,
-              nAges = nAges,
-              masterPositions = masterPositions,
-              ids = nNames,
-              psiSDStore = psiSDStore,
-              muSDStore = muSDStore,
-              mhSDStore = mhSDStore,
-              burn = burn,
-              MC = MC,
-              outliers = outliers,
-              probability = probability,
-              positionThicknesses = positionThicknesses))
+  output <- list(HDI = apply(modelStore[, burn:MC], 1, quantile,c((1 - probability) / 2, 0.5 , (1 + probability) / 2)),
+                 model = modelStore,
+                 thetas = thetaStore,
+                 positionStore = positionStore,
+                 psi = psiStore,
+                 mu = muStore,
+                 predictPositions = predictPositions,
+                 ageGrid = ageGrid,
+                 likelihoods = prob,
+                 nAges = nAges,
+                 masterPositions = masterPositions,
+                 ids = nNames,
+                 psiSDStore = psiSDStore,
+                 muSDStore = muSDStore,
+                 mhSDStore = mhSDStore,
+                 burn = burn,
+                 MC = MC,
+                 outliers = outliers,
+                 probability = probability,
+                 positionThicknesses = positionThicknesses)
+  class(output) <- "mod_bchron_model_run"
+  return(output)
 }
 
 
