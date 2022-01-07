@@ -48,8 +48,8 @@ plot.mod_bchron_model_run <- function(model, type = 'pdf') {
   p <- switch(type,
               pdf = plot_pdf_model(model),
               rectangle = plot_rectangle_model(model),
-              trace = plot_model_trace(),
-              posterior = plot_model_posterior)
+              trace = plot_model_trace(model),
+              posterior = plot_model_posterior(model))
   return(p)
 }
 
@@ -143,7 +143,7 @@ plot_rectangle_model <- function(model) {
 ###############################################################################
 # plots of model posterior
 plot_model_trace <- function(model) {
-  model$thetas |>
+  p <- model$thetas |>
     ggplot(mapping = aes(x = iteration,
                          y = age,
                          color = id)) +
