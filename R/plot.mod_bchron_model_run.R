@@ -143,6 +143,16 @@ plot_rectangle_model <- function(model) {
 ###############################################################################
 # plots of model posterior
 plot_model_trace <- function(model) {
+
+  HDI <- model$thetas |>
+    group_by(id) |>
+    summarise(median = median(age),
+              lower = quantile(age, (1 - model$probability)/2),
+              upper = quantile(age, 1 - (1 - model$probability)/2)) |>
+    pivot_longer(cols = c('median', 'lower', 'upper'),
+                 names_to = 'HDI',
+                 values_to = 'age')
+
   p <- model$thetas |>
     ggplot(mapping = aes(x = iteration,
                          y = age,
@@ -152,15 +162,33 @@ plot_model_trace <- function(model) {
                linetype = 'dashed') +
     facet_wrap(~id, scales = 'free_y') +
     theme(legend.position = 'none') +
-    ggtitle('Trace Plots')
+    ggtitle('Trace Plots') +
+    geom_hline(data = HDI, mapping = aes(yintercept = age,
+                                         linetype = HDI))
+  return(p)
 }
 
 plot_model_posterior <- function(model) {
-  model$thetas |>
+  # calculate HDI for
+  HDI <- model$thetas |>
+    group_by(id) |>
+    summarise(median = median(age),
+              lower = quantile(age, (1 - model$probability)/2),
+              upper = quantile(age, 1 - (1 - model$probability)/2)) |>
+    pivot_longer(cols = c('median', 'lower', 'upper'),
+                 names_to = 'HDI',
+                 values_to = 'age')
+
+ p <- model$thetas |>
     ggplot(mapping = aes(x = age,
                          fill = id)) +
-    geom_density(color = NA) +
+    geom_density(color = NA,
+                 show.legend = FALSE) +
     facet_wrap(~id, scales = 'free') +
-    theme(legend.position = 'none') +
-    ggtitle('Posterior Density')
+    theme(legend.position = 'top') +
+    ggtitle('Posterior Density') +
+    geom_vline(data = HDI, mapping = aes(xintercept = age,
+                                        linetype = HDI))
+ return(p)
 }
+
