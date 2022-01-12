@@ -158,11 +158,11 @@ plot_model_trace <- function(model) {
     ggplot(mapping = aes(x = iteration,
                          y = age,
                          color = id)) +
-    geom_line() +
+    geom_line(show.legend = FALSE) +
     geom_vline(xintercept = model$burn,
                linetype = 'dashed') +
     facet_wrap(~id, scales = 'free_y') +
-    theme(legend.position = 'none') +
+    theme(legend.position = 'top') +
     ggtitle('Trace Plots') +
     geom_hline(data = HDI, mapping = aes(yintercept = age,
                                          linetype = HDI))
