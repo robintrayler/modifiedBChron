@@ -145,6 +145,7 @@ plot_rectangle_model <- function(model) {
 plot_model_trace <- function(model) {
 
   HDI <- model$thetas |>
+    filter(iteration > model$burn) |>
     group_by(id) |>
     summarise(median = median(age),
               lower = quantile(age, (1 - model$probability)/2),
@@ -171,6 +172,7 @@ plot_model_trace <- function(model) {
 plot_model_posterior <- function(model) {
   # calculate HDI for
   HDI <- model$thetas |>
+    filter(iteration > model$burn) |>
     group_by(id) |>
     summarise(median = median(age),
               lower = quantile(age, (1 - model$probability)/2),
