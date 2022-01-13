@@ -186,7 +186,7 @@ plot_model_posterior <- function(model) {
                          fill = id)) +
     geom_density(color = NA,
                  show.legend = FALSE) +
-    facet_wrap(~id, scales = 'free') +
+    facet_wrap(id~., scales = 'free', dir = 'v') +
     theme(legend.position = 'top') +
     ggtitle('Posterior Density') +
     geom_vline(data = HDI, mapping = aes(xintercept = age,
