@@ -1,6 +1,6 @@
 # modifiedBchron
 
-This package provides a version of the [Bchron](https://github.com/andrewcparnell/Bchron/tree/master/R) R package, with features added to improve usability with deep time geochronology data (e.g., Argon-Argon, Uranium-Lead). If you use this package please cite Trayler et al.[^1] the deep time additions *and* Haslett & Parnell[^2] for the underlying `Bchron` model framework.
+This package provides a version of the [Bchron](https://github.com/andrewcparnell/Bchron/tree/master/R) R package, with features added to improve usability with deep time geochronology data (e.g., Argon-Argon, Uranium-Lead). If you use this package please cite Trayler et al.[^1] for the deep time additions *and* Haslett & Parnell[^2] for the underlying `Bchron` model framework.
 
 ## Introduction
 
