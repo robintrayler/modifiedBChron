@@ -40,15 +40,20 @@ agePredict <- function(model,
     f <- approxfun(x, y)
     predictStore[i, ] <- t(f(currPositions))
   }
+
+  # remove burn burn-in
+  predictStore <- predictStore[model$burn:  ncol(model$model), ]
+
   HDI <- t(apply(predictStore, 2, quantile, c((1 - probability) / 2, 0.5, (1 + probability) / 2), na.rm = T))
   HDI <- cbind(newPositions, HDI)
   HDI <- data.frame(HDI)
+
   HDI$ids <- ids
-  colnames(HDI) <- c('newPositions', as.character(c((1 - probability) / 2, 0.5, (1 + probability) / 2)), 'ids')
-  # colnames(HDI)[1] <- 'ids'
-  # colnames(HDI)[2] <- 'Position'
+  colnames(HDI) <- c('newPositions',
+                     as.character(c((1 - probability) / 2, 0.5, (1 + probability) / 2)),
+                     'ids')
+
   predictStore <- data.frame(predictStore)
-  # colnames(predictStore) <- as.character(newPositions)
   return(list(HDI = HDI,
               raw = predictStore))
 }
