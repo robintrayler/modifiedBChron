@@ -7,8 +7,9 @@
 #' @param type c('PDF', contour') Shound probability be displayed as likelihood input PDFs or as contours of posterior probability. Defaults to PDF
 #' @param legend c('color', 'adjacent', NA) type of legend to be drawn. color draws color coded boxes for each sample, adjacent displays sample names next to each PDF. NA omits the legend.
 #' @param ... Optional arguments to be passed to plot (xlim, ylim, xlab, ylab, main)
+#' @import "RColorBrewer"
 #' @export
-#
+
 
 modelPlot <- function(model,
                       agePredictOutput = NA,
@@ -16,15 +17,19 @@ modelPlot <- function(model,
                       scale = 1,
                       type = 'PDF',
                       legend = 'color',
-                      ...){
+                      colorBrewerOption = 'RdYlBu',
+                      ...) {
   ##-------------------------------------------------------------------------
   ## create a scaling factor and color ramp for likelihood PDFs
   scl <- (diff(range(model$predictPositions)) / ncol(model$thetas)) / max(model$nAges) * scale
-  colsPal <- colorRampPalette(c('#d7191c',
-                                '#fdae61',
-                                '#ffffbf',
-                                '#abd9e9',
-                                '#2c7bb6'))
+
+  colsPal <- colorRampPalette(RColorBrewer::brewer.pal(n = 8, colorBrewerOption))
+
+  # colsPal <- colorRampPalette(c('#d7191c',
+  #                               '#fdae61',
+  #                               '#ffffbf',
+  #                               '#abd9e9',
+  #                               '#2c7bb6'))
   cols <- colsPal(ncol(model$thetas))
   ##-------------------------------------------------------------------------
   ## get a list of optional arguments
