@@ -23,7 +23,7 @@ agePredict <- function(model,
   pb <- utils::txtProgressBar(min = 1,
                               max = ncol(model$model),
                               style = 3,
-                              width=40,
+                              width = 40,
                               char = '<>') # create a progress bar
   x <- model$predictPositions
   n <- length(newPositions)
@@ -43,6 +43,8 @@ agePredict <- function(model,
 
   # remove burn burn-in
   predictStore <- predictStore[model$burn:  ncol(model$model), ]
+
+  predictStore <- as.data.frame(predictStore)
 
   HDI <- t(apply(predictStore, 2, quantile, c((1 - probability) / 2, 0.5, (1 + probability) / 2), na.rm = T))
   HDI <- cbind(newPositions, HDI)
